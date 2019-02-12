@@ -43,5 +43,10 @@ here are ideas for N4
 - my fantasy room ought to be modeled after my real room in my last house yes......
 - saketboard ????? ikd
 - screen darkening effect for "other rooms" which darkens it to just a shadow
+- palettes and tilesets:
+  - swappable palettes for LIGHTING EFFECTS
+    - two colors, each with normal and 'DIM' palettes
+  - different tilesets for different ENVIRONMENTS
+- crazy text everywhere "geniet van deze groove deze Groove, Groove"
 
 ya ya ya

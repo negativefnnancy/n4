@@ -1,3 +1,3 @@
-# Negative Nancy Game Project
+# NUTHOUSE
 
-dunno much about it yet, honestly, working title N4 i guess lol ya
+my negative nancy game : )

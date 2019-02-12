@@ -1,0 +1,129 @@
+your head "fantasy room":
+this area is a HOUSE area
+initially known as "???"
+initially starts off with YOUR ROOM and connected to it is YOUR BATHROOM
+when you finally are able to leave the room it goes down an abstract surreal pathway known as "OUTSIDE YOUR ROOM"
+at the end of the surreal pathway is a main room conjoining the rest of the house!! with a couple upstairs bedroms, a long hallway forward to a balcony, and a stair case going downstairs
+downstairs is the KITCHEN, the TV ROOM, and the STUDY, and the FOYER andanother bathroom
+
+
+          +----+
+          |balc|
++---------+-  -+
+|bedrooms |    |-------+
+|         |    | bthrom|
++-+ +-+ +-+    +---+ +-+
+|                      |
+|                      |
++------+          +----+
+       |          -> downstairs
+       +---+  +---+
+
+
+
+        front door
+foyer->   +- -+
++---------|   |
+| dining  |   |-------+
+|         |   | bthrom|
++---  -+---+ +----+ +-+
+|Kit   |              | 
+|      |              | 
+|      +  TV   +------+
+|      |        -> upstairs
++--+ +-+----+ +--+-----
+back   | study   |
+yard   +---------+
+
+
+
+the sTUDY is where you encounter the DAD
+the TV room is where you encounter the MOM
+one of the bedrooms is where u encounter the GUITAR preosn
+and kitchen is where u encounter the GMA cooking n asking u millions of stuff andh asking u to go haul limbs
+the backyrd is where there are DOGS
+FRIDGEY is conveniently in the kitchen hehe
+when u look i nit i ts a FRIDGE BOT reference "the fridge contains _random stuff_"
+
+u can go out on the balcony to see a VOID
+
+dining room actually has a piano.... u can MAKE UR OWN TUNES here
+
+
+YOUR room, will have a southern CLOSET... which acts as the JUKE BOX function, where you can listen to the sound track
+
+there will be weird random floating text in the SURREAL BRIDGE between your room and the rest of the house
+
+a computer in the house will have the options menu with the FAKE censorship option
+also language settings are set here
+
+the whole thing is a SOCIAL ANXIETY PUZZLE where you have to weaken your anxiety enough to allow you to go out the front door
+
+normally when you niteract with it it says something like
+"the front door. you've never been outside. you aren't feeling like it today."
+and you can at any time check the front door to see how you are feeling about going outside
+
+the dad character is someone you can ask advice from
+and you get conflicting advice such as about raw willpower
+the guitar person character is someone you enjoy the music but you are too afraid to talk to her
+
+
+also on the exterior of the doorway leading to your house is your NEON SIGN : )
+
+when you get courage enough to talk to the guitar person you can have convos
+and also CRINGE FEST
+actually maybe the dad character should be the gaze of accountability and the raw willpower both
+the dad character talks abotu capitalism too
+and also .... you want to showe the guitar person things but POMPOUS CONFLICT
+and at the piano there is philosophy about CREATIVE DISCOVERY AND DE INDIVIDUALIZATION
+
+the sleep spot on your wall allows you to pass time, it changes the time of day, and that includes the palette, cycles between the three
+day -> "you napped until dusk"
+dusk -> "you napped until night"
+night -> "you woke up at noon"
+and these different times of day have different scenarios in the house with the what the people are up to
+
+also the SHOWER in the private bathroom!! you DONT TAKE SHOWERS! and if you MAKE YOURSELF, you feel icky
+(whether you can depends on your feelings again)
+
+this whole game is a PUZZLE, a big STATE MACHINE, the STATE consistes of your FEELINGS and the TIME OF DAY
+
+
+also on the SURREAL BRIDGE
+everytime you go there therell be something different, just easter eggy stuff
+personal relevance
+flying texts, random camios
+
+
+
+and anyway, im thinking this whole game can be a 'short game' 
+with the only world being this fantasy surreal house where you are stuck in your mind
+so it can probably be NROM!
+all INSDE
+
+MAPS:
+there are multiple MAPS, which are different arrangements of the home.. i think..
+actually no thats a bad idea lol
+
+there are two maps, upstairs and downstairs, oh, and private room is a map, and surreal bridge is a map, and balcony is a map, and backyard is a map
+those are the maps
+
+i think the name of this game should be 'NUTHOUSE'
+its perfect lol
+
+btw, 'dad' 'mom' 'gma' etc are just codenames, in the game there are no names, just descriptions
+ccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+in the kitchen there shall be MICROWAVE HORROR!!
+
+also.... instead of there being one BIG GAME, with lots of CHAPTERS, it will be SEVERAL GAMES, multiple INSTALLMENTS
+so this first game is the chapter of getting out of the mind force field...
+"NUTHOUSE"
+negative nancy's debut : )
+
+
+i think there ought to be lilybot and lambdabot and tunebot somewhere lol
+if nowhere else then the surreal bridge
+
+
+also three should be a FOURTH cycle, the dREAM cycle, its also at night, but you encounter very STRANGE circumestances

@@ -1,0 +1,35 @@
+the world consists of AREAS
+every area is loaded up its own BG TILESET depending on the TYPE OF ENVIRONMENT
+and each area is divided into ROOMS
+
+color palettes:
+there are different PALETTES for different LIGHTING for the TIME OF DAY
+it consists of 2 COLORED palettes for different colored rooms, each with a NORMAL nad an INACTIVE palette
+the NORMAL palettes are used to draw rooms you are IN, and the INACTIVE palettes are used to draw the rooms that you arent in, just to show you that they are there but so you cant really see into them well
+
+SPRITE TILESETS are all the same though, i think? at least for now
+(that means there is only one sprite tileset)
+
+each TYPE OF ENVIRONMENT has an associated BG TILESET as well as a METATILESET
+METATILESETS define the FUNCTIONAL TILES and represent 16x16 regions, this is how the MAPS are stored!!!
+the actual graphics are DYNAMICALLY ASSEMBLED from tho METATILE and its CONTEXT
+
+ENTITY TABLES are stored independently and loaded ON TRIGGER
+ROOMS are stored as REGIONS independently and loaded ON TRIGGER
+
+NO HUD
+
+TEXT ENGINE pauses the actual engine and overlays text popup at the bottom of the screen
+
+BANK SWITCHING does any bg animations, ok?
+
+TEXT ENGINE is a GAME ENGINE STATE as is NORMAL RUNNING MODE
+
+CONTROLS:
+arrows: move obv
+a: interact/inspect
+b: grab/run
+start: area info/help
+select: pocket
+
+the way the pockets work is you can store any item in your pocket , max of 1, if you press select, the game swaps what you are holding and whats in your pocket (meaning you can put something in your pocket or take something out of your pocket at any given time)

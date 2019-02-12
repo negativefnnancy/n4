@@ -1,0 +1,153 @@
+here is the plot!
+
+so the mechanics, as you know, revolve around HOW YOU FEEL and the time cycle
+
+the time cycle is this: DAYTIME, DUSK, NIGHTTIME, DREAM
+everytime you NAP, the cycle progresses
+each time you AWAKEN, the world is put into a certain state based on the cycle state
+its RANDOM but makes sense for that time fo day
+and DREAM of course is for WIERD stuff
+(often times you will come up with cool light bulb moment ideas in the dreams, here is where you can find SECRETS to various puzzles in the game)
+also bits of philosophy
+
+you start off the game in the daytime cycle
+HOW YOU FEEL is basically the progression of the game
+
+at first you cant leave the room, because you have never done so and dont feel like it now
+you have to explore the room first
+and once you've explored everything, you will feel INSPIRED
+when you feel inspried, and you check the door, you will be able to leave "you're feeling adventureous, would you like to leave your room?"
+
+oh yeah, obviously, the goal of the game is to LEAVE THE FRONT DOOR, meaning you have to work up the courage and the desire to do so
+
+oh right, and your RESPONSES to people will evolve as you gain COURAGE
+
+two main dimensions of FEELING: COURAGE and DESIRE
+
+at first, your only options are generally to shake your head and point at things, but as you gain courage you can actually say things, and eventually you can bring up things on your own!!!
+
+
+Hmmm....
+ok lets get organized
+things to consider
+- map initializations depending on CYCLE PHASE and previous state
+- the list of interactions and available responses depending on your state
+
+okay... so the game state is this:
+- COURAGE: inits to 0
+- HEART: inits to 0
+- PHASE: inits to day
+- DAD STATE
+- MOM STATE
+- SISTER STATE
+- GMA STATE
+
+on phase change: update each individual characters states depending on prev states and the current phase
+on map change: initialize entity table depending on character states (thats it, no need to consider phase)
+
+
+basically though, we can develop each 4 characters individually
+they have their state variable, and their state owns the state of any misc items in the world
+
+okoko... the MAPS and the ENTITY TABLES are BOTH dynamic...
+there are INIT functions, which load them largely from rom but dynamically compute some of them surely
+
+ROOM_CHANGE_FUNC:
+teleports you (camera implicitly scrolls) and ACTIVE REGION is changed
+MAP_CHANGE_FUNC:
+screen transition effect, teleports you, camera is set
+map is dynamically loaded depending on the game state
+entity table is dynamically loaded depending on the game state
+
+
+but yes, maps are all fully scrollable??
+thinkin about how they should be stored though
+should it be meta tiles? yes obviously, metatiles with dynamically computed graphics
+
+also not even NEGATIVE NANCY is named, in the game, its the character yes, but u dont have an actual name
+there are no names in the game at all
+
+end text: WHITE SCREEN BLACK TEXT
+"you went outside"
+"..."
+"you are free"
+"..."
+"what are you going to do next?"
+
+
+
+
+
+
+
+
+
+
+
+OK CHARACTER STATES:
+
+
+GMA:
+MISC STATES:
+COOKING: nothing, or a dish
+PREPARED: nothing, or a dish that has been cooked, which she will give to you on interaction (as an entity)
+STATES:
+STATE: normal
+she spawns in the kitchen
+INTERACTIONS IN THIS STATE:
+- "come, let me show you where i put everything" (follow her, she rambles on and on about where everything is)
+- "do you like [some dish]" (you can say yes or no, and she'll make it later in the day if you say yes)
+- "taste this spinache dip, see if its just right" (you taste it) (and you can choose "needs sour cream" "needs spinach" "needs seasoning" "just right") and it goes on and on forever until its just right, but you can also go TOO FAR, your options change the BALANCE of the mixture, and different things are said depending on the balance, and if you go too far, then 'its ruined, i'll just make some more'
+- "what is this?" (random items in reply)
+- "come, help me haul limbs in the back yard" ("i'm not feelin that")
+in your room:
+she'll come bang on the door occassionally
+sometimse if you dont answer she'll use a knife to get herway in, coming in holding a stake knife, and then ask for your dirty clothes : )
+
+
+
+AAA
+i want a rare occasion where gma is out back late at night (or maybe in dream phase) and you can sit with her and have a warm heartfelt conversation about life and god, and you can choose to open up and support her or shut up
+AND YES, there have to be situations where you can SPEAK UP and sUPPORT THE CHARACTERS... but you have to have enough courage in order to do so
+
+i think maybe... ? COURAGE should be displayed on the start screen? (which is just text box)
+
+you can get different endings as well....
+depending on how different scenarios went... 
+at the VERY end of the game, after the white screen, you are shown what achievements you got, yes
+and show a shadow of all the endings, only hilghitng the ones you unlocked
+and telling you the NAME of the ending you got that round
+
+gonnab e a sister support scenario, where you open up to her, and she vents to you, and you can support her or be silent but you have to have courage
+
+gonna be a dad get mad at scenario, it can go different ways
+you can yell at him, keep silent
+maybe even get kicked out of the house...!! (which is the worst ending actually.. lol)
+
+death in the family scenario??
+
+
+endings:
+MAD DAD ENDING... get kicked out of the house with ou poor outlook on life, ready to rot and die in the streets
+ULTIMATE ENDING: you supported all the characters, understood them all, came to terms with yourself, defeated your anxiety, gained courage, and have a positive outlook on life
+GENERIC ENDING: you simply were feeling adventurous enoguh to leave your home, unsure about the outlook you have on life, maybe you will die, maybe you will make it, who knows, you left behind your family
+DEAD FAMILY: all your family members except the sister die, so you are forced to go out on your own, you are left with lingering regrets
+
+and actually, depending on the ending you get, you get different white screen flavor text
+
+THERE HAS TO BE SOCIOPATHIC THEMES IN HERE TO...
+about ... feeling completely apathetic torwards everyonend it shows up in the dogs as well.. how you treat them
+when you are apathetic you dont care, they love you but you dont care, you can kick them around, and stuff, 
+but when you love them, they support you
+YOU CAN CHOOSE TO LET THEM IN YOUR ROOM OR NOT....
+
+also ... at a certain point in the game, the BRIDGE disappears, IF ... you feel more connected with your family
+see, the bridge symbolizes dissociation and apathy
+so when you mend that gap, at a certain point the bridge is gone
+
+lost love and impossible crushes have to be a theme
+swaying you toward total isolation
+
+COURAGE represents your ABILITY
+HEART represents your INTENTIONS
+so if courage is up, you can do more, but the kinds of chouces you can make depend on heart

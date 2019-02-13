@@ -147,6 +147,8 @@ entity_handler_return:
 	rol
 	and #$f0
 	ora tmp4
+	clc
+	sbc cam_x
 	sta tmp4
 
 	; get the entity's y position
@@ -164,6 +166,8 @@ entity_handler_return:
 	rol
 	and #$f0
 	ora tmp4+1
+	clc
+	sbc cam_y
 	sta tmp4+1
 
 ;;;

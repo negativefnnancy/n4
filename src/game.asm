@@ -64,6 +64,12 @@ game_handler:
 	lda #.hibyte(oam)
 	sta oamdma
 
+	; set camera?
+	lda cam_x
+	sta ppuscroll
+	lda cam_y
+	sta ppuscroll
+
 	; update oam for next frame
 	jsr clear_oam
 	jsr iterate_entities

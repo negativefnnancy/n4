@@ -1,0 +1,7 @@
+.include "nes.inc"
+.include "macros.inc"
+.include "header.asm"
+.include "structs.asm"
+.include "variables.asm"
+.include "assets.asm"
+.include "code.asm"

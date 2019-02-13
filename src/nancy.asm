@@ -1,32 +1,32 @@
 ; constants for nancy!
-nancy_walk_speed	= $0008
+nancy_walk_step_size	= $0030
 
 ; make mancy move horizontally dude
-; tmp1 = offset
+; tmp8 = offset
 move_nancy_x:
 	; low byte
 	lda entities+Entity::x_pos, y
 	clc
-	adc tmp1
+	adc tmp8
 	sta entities+Entity::x_pos, y
 	; high byte
 	lda entities+Entity::x_pos+1, y
-	adc tmp1+1
+	adc tmp8+1
 	sta entities+Entity::x_pos+1, y
 	; buh bey
 	rts
 
 ; make mancy move vertically dude
-; tmp1 = offset
+; tmp8 = offset
 move_nancy_y:
 	; low byte
 	lda entities+Entity::y_pos, y
 	clc
-	adc tmp1
+	adc tmp8
 	sta entities+Entity::y_pos, y
 	; high byte
 	lda entities+Entity::y_pos+1, y
-	adc tmp1+1
+	adc tmp8+1
 	sta entities+Entity::y_pos+1, y
 	; buh bey
 	rts
@@ -113,11 +113,17 @@ nancy_entity_handler:
 @skip_start_moving:
 
 	; see if nancy needs to actually move!
+	; sync motion with animation frames tho,
+	; bc otherwise it looks awkward lol
+	lda entities+Entity::timer, y
+	cmp #$00
+	bne @skip_move	
+	; ok now we've been synced, lets see what buttons are pressed
 	lda pad
 	and #%00000001
 	beq :+
 	; move right
-	st16 tmp1, nancy_walk_speed	
+	st16 tmp8, nancy_walk_step_size	
 	jsr move_nancy_x
 	jmp @skip_move
 :
@@ -125,7 +131,7 @@ nancy_entity_handler:
 	and #%00000010
 	beq :+
 	; move left
-	st16 tmp1, -nancy_walk_speed	
+	st16 tmp8, -nancy_walk_step_size
 	jsr move_nancy_x
 	jmp @skip_move
 :
@@ -133,7 +139,7 @@ nancy_entity_handler:
 	and #%00000100
 	beq :+
 	; move down
-	st16 tmp1, nancy_walk_speed	
+	st16 tmp8, nancy_walk_step_size
 	jsr move_nancy_y
 	jmp @skip_move
 :
@@ -141,7 +147,7 @@ nancy_entity_handler:
 	and #%00001000
 	beq :+
 	; move up
-	st16 tmp1, -nancy_walk_speed	
+	st16 tmp8, -nancy_walk_step_size
 	jsr move_nancy_y
 :
 @skip_move:

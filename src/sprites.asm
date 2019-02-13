@@ -71,6 +71,7 @@ draw_metasprite:
 	rts
 
 ; assemble oam from entity data
+; this subroutine is an absolute disaster!!!!
 iterate_entities:
 	ldy #$00	; entity pointer
 	ldx #$00	; oam pointer
@@ -79,7 +80,47 @@ entity_loop:
 	pha
 	txa
 	pha
+	sty tmp7
 
+	; get and update the local timer
+	ldx entities+Entity::timer, y
+	inx
+	txa
+	sta tmp5
+	sta entities+Entity::timer, y
+
+	; goal now: fix timer overflow for current animation
+	; lookup animation set for this entity
+	lda entities+Entity::identity, y
+	asl
+	tax
+	lda anim::table, x
+	sta tmp0
+	lda anim::table+1, x
+	sta tmp0+1
+
+	; lookup the animation in the set for the entity's current state
+	lda entities+Entity::state, y
+	asl
+	tay
+	lda (tmp0), y
+	sta tmp1
+	iny
+	lda (tmp0), y
+	sta tmp1+1
+
+	; get the animation speed
+	ldy #$01	; frame pointer
+	lda (tmp1), y	; get animation frame duration
+	cmp tmp5	; check for timer overflow
+	bne :+
+	ldy tmp7
+	lda #$00
+	sta entities+Entity::timer, y	
+	sta tmp5
+:
+
+	ldy tmp7
 	; jump to this entity's logic handler
 	lda entities+Entity::identity, y
 	asl
@@ -125,24 +166,18 @@ entity_handler_return:
 	ora tmp4+1
 	sta tmp4+1
 
-	; get and update the local timer
-	ldx entities+Entity::timer, y
-	inx
-	txa
-	sta tmp5
-	sta entities+Entity::timer, y
-
+;;;
 	; lookup animation set for this entity
-	lda entities+Entity::identity, y
-	asl
-	tax
-	lda anim::table, x
-	sta tmp0
-	lda anim::table+1, x
-	sta tmp0+1
-
+;	lda entities+Entity::identity, y
+;	asl
+;	tax
+;	lda anim::table, x
+;	sta tmp0
+;	lda anim::table+1, x
+;	sta tmp0+1
+;
+	; keeping this bc the state may have changed after the logic handler
 	; lookup the animation in the set for the entity's current state
-	sty tmp7
 	lda entities+Entity::state, y
 	asl
 	tay
@@ -168,6 +203,8 @@ entity_handler_return:
 	sta entities+Entity::timer, y	
 	sta tmp5
 :
+;;;
+
 	; get the animation frame
 	; and point y to that frame
 	ldy tmp7

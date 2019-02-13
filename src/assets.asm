@@ -87,41 +87,42 @@
 		table:	.word null
 	.endscope
 	.scope nancy
+		walk_frames	= $06
 		idle_north:
-			.byte $01, $10
+			.byte $01, $00
 			.byte $01, $00, $00
 		idle_south:
-			.byte $01, $10
+			.byte $01, $00
 			.byte $04, $00, $00
 		idle_east:
-			.byte $01, $10
+			.byte $01, $00
 			.byte $07, $00, $00
 		idle_west:
-			.byte $01, $10
+			.byte $01, $00
 			.byte $0a, $00, $00
 		walk_north:
-			.byte $04, $0c
+			.byte $04, walk_frames
 			.byte $03, $00, $00
 			.byte $01, $00, $00
 			.byte $02, $00, $00
 			.byte $01, $00, $00
 		walk_south:
-			.byte $04, $0c
-			.byte $06, $00, $00
-			.byte $04, $00, $00
+			.byte $04, walk_frames
 			.byte $05, $00, $00
 			.byte $04, $00, $00
+			.byte $06, $00, $00
+			.byte $04, $00, $00
 		walk_east:
-			.byte $04, $0c
+			.byte $04, walk_frames
 			.byte $09, $00, $00
 			.byte $07, $00, $00
 			.byte $08, $00, $00
 			.byte $07, $00, $00
 		walk_west:
-			.byte $04, $0c
-			.byte $0c, $00, $00
-			.byte $0a, $00, $00
+			.byte $04, walk_frames
 			.byte $0b, $00, $00
+			.byte $0a, $00, $00
+			.byte $0c, $00, $00
 			.byte $0a, $00, $00
 
 		; table of all the animations for this entity

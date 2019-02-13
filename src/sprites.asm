@@ -1,3 +1,15 @@
+.include "nancy.asm"
+
+; the null handler for null entities
+; does nothing, obv
+null_entity_handler:
+	jmp entity_handler_return
+
+; entity logic handler routines
+entity_handler_table:
+.word null_entity_handler-1
+.word nancy_entity_handler-1
+
 ; draw a metasprite
 ; a = metasprite index
 ; x = oam pointer
@@ -62,40 +74,55 @@ draw_metasprite:
 iterate_entities:
 	ldy #$00	; entity pointer
 	ldx #$00	; oam pointer
-@entity_loop:
+entity_loop:
 	tya
 	pha
 	txa
 	pha
 
+	; jump to this entity's logic handler
+	lda entities+Entity::identity, y
+	asl
+	tax
+	lda entity_handler_table+1, x
+	pha
+	lda entity_handler_table, x
+	pha
+	rts
+entity_handler_return:
+
 	; get the entity's x position
+	; maybe this can be done better??
 	lda entities+Entity::x_pos, y
-	and #$f0
+	lsr
+	lsr
+	lsr
+	lsr
 	sta tmp4
 	lda entities+Entity::x_pos+1, y
-	and #$0f
-	clc
-	adc tmp4
-	ror
-	ror
-	ror
-	ror
-	ror
+	rol
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmp4
 	sta tmp4
 
 	; get the entity's y position
+	; maybe this can be done better??
 	lda entities+Entity::y_pos, y
-	and #$f0
+	lsr
+	lsr
+	lsr
+	lsr
 	sta tmp4+1
 	lda entities+Entity::y_pos+1, y
-	and #$0f
-	clc
-	adc tmp4+1
-	ror
-	ror
-	ror
-	ror
-	ror
+	rol
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmp4+1
 	sta tmp4+1
 
 	; get and update the local timer
@@ -150,7 +177,7 @@ iterate_entities:
 	bne :++
 	inx
 	cpx tmp2
-	bne :+
+	bcc :+
 	ldx #$00
 :
 	txa
@@ -198,7 +225,8 @@ iterate_entities:
 	iny
 	iny
 	beq :+
-	jmp @entity_loop
+	jmp entity_loop
 :
 
 	rts
+

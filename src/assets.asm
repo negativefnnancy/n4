@@ -101,28 +101,28 @@
 			.byte $0a, $00, $00
 		walk_north:
 			.byte $04, $0c
+			.byte $03, $00, $00
 			.byte $01, $00, $00
 			.byte $02, $00, $00
 			.byte $01, $00, $00
-			.byte $03, $00, $00
 		walk_south:
 			.byte $04, $0c
+			.byte $06, $00, $00
 			.byte $04, $00, $00
 			.byte $05, $00, $00
 			.byte $04, $00, $00
-			.byte $06, $00, $00
 		walk_east:
 			.byte $04, $0c
+			.byte $09, $00, $00
 			.byte $07, $00, $00
 			.byte $08, $00, $00
 			.byte $07, $00, $00
-			.byte $09, $00, $00
 		walk_west:
 			.byte $04, $0c
+			.byte $0c, $00, $00
 			.byte $0a, $00, $00
 			.byte $0b, $00, $00
 			.byte $0a, $00, $00
-			.byte $0c, $00, $00
 
 		; table of all the animations for this entity
 		table:

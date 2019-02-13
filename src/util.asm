@@ -19,8 +19,13 @@ read_pad:
 	; now check for instantaneous presses
 	lda pad_press
 	eor pad		; mask for changes only
+	sta pad_change	; store changes
 	and pad		; keep only pressed changes
-	sta pad_press
+	sta pad_press	; store presses	
+	lda pad	
+	eor #$ff
+	and pad_change	; now get only unpressed changes
+	sta pad_unpress
 	
 	rts
 

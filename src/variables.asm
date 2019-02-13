@@ -14,7 +14,9 @@ state:		.res 1
 
 ; buttons
 pad:		.res 1
+pad_change:	.res 1
 pad_press:	.res 1
+pad_unpress:	.res 1
 
 ; timers
 global_timer:	.res 2

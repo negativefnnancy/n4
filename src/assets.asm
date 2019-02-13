@@ -75,7 +75,7 @@
 		.word nancy_north_1, nancy_north_2, nancy_north_3
 		.word nancy_south_1, nancy_south_2, nancy_south_3
 		.word nancy_east_1, nancy_east_2, nancy_east_3
-		.word nancy_west_1, nancy_west_2, nancy_west3
+		.word nancy_west_1, nancy_west_2, nancy_west_3
 .endscope
 
 ; animation sets

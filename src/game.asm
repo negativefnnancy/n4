@@ -15,11 +15,11 @@ enter_game:
 	jsr load_nametable
 
 	; load the sprite palette
-	st16 tmp0, pal::fg:day
+	st16 tmp0, pal::fg::day
 	jsr load_fg_palette
 
 	; load the bg palette
-	st16 tmp0, pal::bg:day
+	st16 tmp0, pal::bg::day
 	jsr load_bg_palette
 
 	; load the map data
@@ -34,7 +34,7 @@ enter_game:
 	jsr copy
 
 	; load the entity table
-	ldy #Level::entities
+	ldy #Area::entities
 	lda (tmp3), y
 	sta tmp0
 	iny
@@ -56,8 +56,8 @@ enter_game:
 	sta ppumask
 	rts
 
-; handler for the level screen
-level_handler:
+; handler for the main game screen
+game_handler:
 	; copy oam
 	lda #.lobyte(oam)
 	sta oamaddr

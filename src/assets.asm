@@ -46,28 +46,28 @@
 	nancy_east_1:
 	nancy_west_1:
 		.byte $04
-		.byte $00, $00, $03, $00
-		.byte $00, $00, $43, $08
-		.byte $08, $10, $03, $00
-		.byte $08, $10, $43, $08
+		.byte $00, $00, $00, $00
+		.byte $00, $00, $40, $08
+		.byte $08, $10, $00, $00
+		.byte $08, $10, $40, $08
 	nancy_north_2:
 	nancy_south_2:
 	nancy_east_2:
 	nancy_west_2:
 		.byte $04
-		.byte $00, $01, $43, $00
-		.byte $00, $01, $03, $08
-		.byte $08, $11, $43, $00
-		.byte $08, $12, $43, $08
+		.byte $00, $01, $40, $00
+		.byte $00, $01, $00, $08
+		.byte $08, $11, $40, $00
+		.byte $08, $12, $40, $08
 	nancy_north_3:
 	nancy_south_3:
 	nancy_east_3:
 	nancy_west_3:
 		.byte $04
-		.byte $00, $01, $43, $00
-		.byte $00, $01, $03, $08
-		.byte $08, $12, $03, $00
-		.byte $08, $11, $03, $08
+		.byte $00, $01, $40, $00
+		.byte $00, $01, $00, $08
+		.byte $08, $12, $00, $00
+		.byte $08, $11, $00, $08
 
 	; lookup table of all the metasprites
 	table:
@@ -100,25 +100,25 @@
 			.byte $01, $10
 			.byte $0a, $00, $00
 		walk_north:
-			.byte $03, $10
+			.byte $04, $0c
 			.byte $01, $00, $00
 			.byte $02, $00, $00
 			.byte $01, $00, $00
 			.byte $03, $00, $00
 		walk_south:
-			.byte $03, $10
+			.byte $04, $0c
 			.byte $04, $00, $00
 			.byte $05, $00, $00
 			.byte $04, $00, $00
 			.byte $06, $00, $00
 		walk_east:
-			.byte $03, $10
+			.byte $04, $0c
 			.byte $07, $00, $00
 			.byte $08, $00, $00
 			.byte $07, $00, $00
 			.byte $09, $00, $00
 		walk_west:
-			.byte $03, $10
+			.byte $04, $0c
 			.byte $0a, $00, $00
 			.byte $0b, $00, $00
 			.byte $0a, $00, $00

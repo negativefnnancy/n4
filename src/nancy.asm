@@ -152,67 +152,77 @@ nancy_entity_handler:
 :
 @skip_move:
 
-	; get the camera coordinates onto tmp8 and tmp9
-	lda #$00
-	sta tmp8+1
-	; first the low bits
-	lda cam_x
-	sta tmp8
-	clc
-	rol tmp8
-	rol tmp8+1
-	rol tmp8
-	rol tmp8+1
-	rol tmp8
-	rol tmp8+1
-	rol tmp8
-	rol tmp8+1
-	; now the cam high bits
-	lda cam_high
-	and #$f0
-	ora tmp8+1
-	sta tmp8+1
+	; ok we're gonna do a simpler camera scrolling effect
+	; simply move the camera in a direction if nancy is past it lol
 
-	; now subtract nancy's position from it
+	; get the entity's x position
+	; maybe this can be done better??
 	lda entities+Entity::x_pos, y
-	clc
-	sbc #$78
-	sta tmp9
-	lda entities+Entity::x_pos+1, y
-	clc
-	sbc #$78
-	sta tmp9+1
-	clc
-	lda tmp9
-	sbc tmp8	; this is delta
-	sta tmp8
-	lda tmp9+1
-	sbc tmp8+1	; this is delta
-	sta tmp8+1
-
-	; and now to move the camera to nancy!
-	lda tmp8
 	lsr
 	lsr
 	lsr
 	lsr
 	sta tmp4
-	lda tmp8+1
+	lda entities+Entity::x_pos+1, y
 	rol
 	rol
 	rol
 	rol
 	and #$f0
 	ora tmp4
-	; drag effect
-	lsr
-	lsr
-	lsr
-	lsr
-	; add the delta to the cam
 	clc
-	adc cam_x
-	sta cam_x
+	sbc cam_x
+	sta tmp4
+
+	; get the entity's y position
+	; maybe this can be done better??
+	lda entities+Entity::y_pos, y
+	lsr
+	lsr
+	lsr
+	lsr
+	sta tmp4+1
+	lda entities+Entity::y_pos+1, y
+	rol
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmp4+1
+	clc
+	sbc cam_y
+	sta tmp4+1
+
+	; ok we nancy's position on tmp4, now whats
+	; now we need to check if its past certain boundaries
+	lda tmp4
+	cmp #$40
+	bcs :+
+	; move cam left
+	dec cam_x
+	jmp @cam_done_x
+:
+	lda tmp4
+	cmp #$c0
+	bcc :+
+	; move cam right
+	inc cam_x
+:
+@cam_done_x:
+	lda tmp4+1
+	cmp #$40
+	bcs :+
+	; move cam up
+	dec cam_y
+	jmp @cam_done_y
+:
+	lda tmp4+1
+	cmp #$a0
+	bcc :+
+	; move cam down
+	inc cam_y
+:
+@cam_done_y:
 
 	; all done here! bye bye nancy ;)
 	jmp entity_handler_return

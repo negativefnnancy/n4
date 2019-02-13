@@ -9,6 +9,7 @@ tmp5:		.res 2
 tmp6:		.res 2
 tmp7:		.res 2
 tmp8:		.res 2
+tmp9:		.res 2
 
 ; engine state
 state:		.res 1

@@ -152,5 +152,67 @@ nancy_entity_handler:
 :
 @skip_move:
 
+	; get the camera coordinates onto tmp8 and tmp9
+	lda #$00
+	sta tmp8+1
+	; first the low bits
+	lda cam_x
+	sta tmp8
+	clc
+	rol tmp8
+	rol tmp8+1
+	rol tmp8
+	rol tmp8+1
+	rol tmp8
+	rol tmp8+1
+	rol tmp8
+	rol tmp8+1
+	; now the cam high bits
+	lda cam_high
+	and #$f0
+	ora tmp8+1
+	sta tmp8+1
+
+	; now subtract nancy's position from it
+	lda entities+Entity::x_pos, y
+	clc
+	sbc #$78
+	sta tmp9
+	lda entities+Entity::x_pos+1, y
+	clc
+	sbc #$78
+	sta tmp9+1
+	clc
+	lda tmp9
+	sbc tmp8	; this is delta
+	sta tmp8
+	lda tmp9+1
+	sbc tmp8+1	; this is delta
+	sta tmp8+1
+
+	; and now to move the camera to nancy!
+	lda tmp8
+	lsr
+	lsr
+	lsr
+	lsr
+	sta tmp4
+	lda tmp8+1
+	rol
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmp4
+	; drag effect
+	lsr
+	lsr
+	lsr
+	lsr
+	; add the delta to the cam
+	clc
+	adc cam_x
+	sta cam_x
+
 	; all done here! bye bye nancy ;)
 	jmp entity_handler_return

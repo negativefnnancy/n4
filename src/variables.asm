@@ -30,6 +30,14 @@ cam_x:		.res 1
 cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
+.segment "STACK"
+; also, use part of the stack page for nametable update buffers
+nt0_buf0:	.res 30
+nt0_buf1:	.res 30
+nt2_buf0:	.res 30
+nt2_buf1:	.res 30
+
 .segment "BSS"
 entities:	.res $100	; entity table
 map:		.res $400	; loaded map
+

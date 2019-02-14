@@ -1,10 +1,19 @@
 ; setup the main game screen
 ; tmp3 = area address
 enter_game:
+	; wait for vblank
+	jsr wait_vblank
+
 	; disable ppu
 	lda #$00
 	sta ppuctrl
 	sta ppumask
+
+	; lol look, i just honestly dont know when to wait for vblank
+	; it is something to learn
+	; v important
+	; wait for vblank
+	jsr wait_vblank
 
 	; set the engine state
 	lda #$02
@@ -43,6 +52,9 @@ enter_game:
 	; now that the map is loaded
 	; render it to the bg map
 	jsr draw_map
+
+	; wait for vblank
+	jsr wait_vblank
 
 	; enable the ppu
 	lda #$88	; enable nmi and use second chr page for sprites
@@ -162,97 +174,89 @@ get_tile:
 	; go get em tiger
 	rts
 
-; buffer the bg for scrolling
-buffer_bg:
-	; first get the vram address offset of the buffer origin
-	lda cam_x
-	lsr	
-	lsr	
-	lsr	
-	sta tmp8
-	lda cam_y
-	lsr	
-	lsr	
-	lsr	
-	sta tmp8+1
+; copy the scroll buffer into the nametable
+update_nametables:
+	; ok we got to update the left and right seams for top and bottom nametables both
+	; and we got to be fast
+	; so ! unrolled loops
 
-	;;; VERTICAL BUFFER
-
-	; increment vertically
+	; first things first
+	; set things up for vertical increments
 	lda #$8c
 	sta ppuctrl
+	; and figure out the x offset!
+	lda cam_x
+	lsr
+	lsr
+	lsr
+	sta tmp8
 
-	; latch the ppu address
-	lda cam_high
-	and #$01
-	beq :+
-	; starting on the bottom name table
-	; store alt nametable
-	lda #.hibyte(nt2)
-	sta tmp3
-	; start on main nametable
+	;;;;; now Do The STuff
+
+	;;; nt0 right seam (x = 0) nt0_buf0
+	; select the address...!
 	lda #.hibyte(nt0)
 	sta ppuaddr
 	lda tmp8
 	sta ppuaddr
-	jmp :++
-:
-	; starting on the upper nametable
-	; store alt nametable
-	lda #.hibyte(nt0)
-	sta tmp3
-	; start on main nametable
-	lda #.hibyte(nt2)
-	sta ppuaddr
-	lda tmp8
-	sta ppuaddr
-:
-
-	; load the stuffs
-	lda #$00
-	sta tmp9
-:
-	cmp tmp8+1
-	bne :+
-	; switch to top table
-	lda cam_y
-	clc
-	rol
-	rol
-	and #$e0
-	clc
-	adc tmp8
-	sta tmp4
-	lda cam_y
-	clc
-	rol
-	rol
-	rol
-	and #$03
-	clc
-	adc tmp3
-	sta ppuaddr
-	lda tmp4
-	sta ppuaddr
-:
-	; load the byte
-	lda global_timer
-	and #$3
-	clc
-	adc tmp9
+	; start loop......
+.repeat 30, I
+	lda nt0_buf0+I
 	sta ppudata
-	; next
-	inc tmp9
-	lda tmp9
-	cmp #$1e
-	bne :--
+.endrepeat
 
+	;;; nt2 right seam (x = 0) nt2_buf0
+	; select the address...!
+	lda #.hibyte(nt2)
+	sta ppuaddr
+	lda tmp8
+	sta ppuaddr
+	; start loop......
+.repeat 30, I
+	lda nt2_buf0+I
+	sta ppudata
+.endrepeat
+
+	; move over the column for the left seam now lol
+	inc tmp8
+	lda tmp8
+	and #$1f
+	sta tmp8
+
+	;;; nt0 left seam (x = 1) nt0_buf1
+	; select the address...!
+	lda #.hibyte(nt0)
+	sta ppuaddr
+	lda tmp8
+	sta ppuaddr
+	; start loop......
+.repeat 30, I
+	lda nt0_buf1+I
+	sta ppudata
+.endrepeat
+
+	;;; nt2 left seam (x = 1) nt2_buf1
+	; select the address...!
+	lda #.hibyte(nt2)
+	sta ppuaddr
+	lda tmp8
+	sta ppuaddr
+	; start loop......
+.repeat 30, I
+	lda nt2_buf1+I
+	sta ppudata
+.endrepeat
+	; whew
 	rts
 
 ; handler for the main game screen
 game_handler:
-	; bg scroll buffer!
-	jsr buffer_bg
+
+
+	;; VBLANK STUFF
+
+	; update nametables..!
+	jsr update_nametables
 
 	; copy oam
 	lda #.lobyte(oam)
@@ -281,6 +285,9 @@ game_handler:
 	clc
 	adc #$88
 	sta ppuctrl	
+
+
+	;; POST VBLANK STUFF
 
 	; update oam for next frame
 	jsr clear_oam

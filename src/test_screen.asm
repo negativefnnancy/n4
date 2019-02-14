@@ -1,9 +1,15 @@
 ; setup the bgtest screen
 enter_test_screen:
+	; wait for vblank
+	jsr wait_vblank
+
 	; disable ppu
 	lda #$00
 	sta ppuctrl
 	sta ppumask
+
+	; wait for vblank
+	jsr wait_vblank
 
 	; set the engine state
 	lda #$01
@@ -17,16 +23,20 @@ enter_test_screen:
 	st16 tmp0, pal::bg::night
 	jsr load_bg_palette
 
-	; reset scrolling
-	lda #$00
-	sta ppuscroll
-	sta ppuscroll
+	; wait for vblank
+	jsr wait_vblank
 
 	; enable the ppu
 	lda #$88	; enable nmi and use second chr page for sprites
 	sta ppuctrl
 	lda #$08	; show bg only
 	sta ppumask
+
+	; reset scrolling
+	lda #$00
+	sta ppuscroll
+	sta ppuscroll
+
 	rts
 
 ; handler for the bgtest screen

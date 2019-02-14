@@ -1,5 +1,8 @@
 ; setup the title screen
 enter_title:
+	; wait for vblank
+	jsr wait_vblank
+
 	; disable ppu
 	lda #$00
 	sta ppuctrl
@@ -19,16 +22,20 @@ enter_title_skip:
 	st16 tmp0, pal::bg::dusk
 	jsr load_bg_palette
 
-	; reset scrolling
-	lda #$00
-	sta ppuscroll
-	sta ppuscroll
+	; wait for vblank
+	jsr wait_vblank
 
 	; enable the ppu
 	lda #$88
 	sta ppuctrl
 	lda #$08
 	sta ppumask	; show bg only
+
+	; reset scrolling
+	lda #$00
+	sta ppuscroll
+	sta ppuscroll
+
 	rts
 
 ; blank the "START" string on the title screen

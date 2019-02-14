@@ -43,14 +43,20 @@ metatiles:
 	.byte $24, $24, $24, $24	; blank 1
 	.byte $25, $25, $25, $25	; blank 2
 	.byte $26, $26, $26, $26	; blank 3
-	.byte $39, $39, $3a, $3a	; north wall
-	.byte $38, $38, $25, $25	; south wall
-	.byte $3b, $43, $3b, $43	; east wall
-	.byte $40, $3c, $40, $3c	; west wall
+	.byte $39, $39, $3a, $3a	; south facing wall
+	.byte $38, $38, $25, $25	; north facing wall
+	.byte $3b, $43, $3b, $43	; west facing wall
+	.byte $40, $3c, $40, $3c	; east facing wall
 	.byte $30, $31, $40, $41	; northwest inner corner
 	.byte $32, $33, $42, $43	; northeast inner corner
 	.byte $50, $51, $25, $25	; southwest inner corner
 	.byte $52, $53, $25, $25	; southeast inner corner
+	.byte $38, $3e, $25, $25	; north facing wall w shadow
+	.byte $40, $3d, $40, $3c	; east facing wall w shadow
+	.byte $48, $48, $25, $25	; south facing shadow
+	.byte $25, $49, $25, $49	; west facing shadow
+
+	.byte $48, $4b, $25, $49	; southwest inner corner shadow
 
 ; metasprites
 .scope metasprites

@@ -67,6 +67,9 @@ enter_game:
 	sta ppuscroll
 	sta ppuscroll
 
+	; reset scroll direction var
+	sta scroll_dir
+
 	rts
 
 ; draw the entire bg map, both top and bottom nametables
@@ -123,6 +126,91 @@ draw_map_part:
 	cmp #$1e
 	bne :--
 	
+	rts
+
+; render the scroll buffer seam for loading into the nametable next frame
+draw_scroll_buffer_right:
+	;; RIGHT seam!
+
+	; get x coordinate
+	lda cam_x
+	lsr
+	lsr
+	lsr
+	sta tmpa+1
+	
+	; TOP table
+	; get quadrant
+	lda #$00	;tmp
+	sta tmp8
+	; set destination
+	st16 tmp3, nt0_buf0
+	; do it
+	jsr draw_scroll_buffer_part
+
+	; BOTTOM table
+	; get quadrant
+	lda #$02	;tmp
+	sta tmp8
+	; set destination
+	st16 tmp3, nt2_buf0
+	; do it
+	jsr draw_scroll_buffer_part
+
+	rts
+
+draw_scroll_buffer_left:
+	;; LEFT seam!
+
+	; get x coordinate
+	; move it over 1 tile (and wrap around)
+	lda cam_x
+	clc
+	adc #$08
+	lsr
+	lsr
+	lsr
+	sta tmpa+1
+	
+	; TOP table
+	; get quadrant
+	lda #$00	;tmp
+	sta tmp8
+	; set destination
+	st16 tmp3, nt0_buf1
+	; do it
+	jsr draw_scroll_buffer_part
+
+	; BOTTOM table
+	; get quadrant
+	lda #$02	;tmp
+	sta tmp8
+	; set destination
+	st16 tmp3, nt2_buf1
+
+	; do it
+
+draw_scroll_buffer_part:
+	; now loop through the column
+	lda #$00
+	tay
+	sta tmpa
+:
+	; get tile and store it
+	tya
+	pha
+	jsr get_tile
+	sta tmp4
+	pla
+	tay
+	lda tmp4
+	sta (tmp3), y
+	; prep next iteration
+	iny
+	inc tmpa
+	lda tmpa
+	cmp #$1e
+	bne :-
 	rts
 
 ; load onta a the appropriate bg tile at screen coordinates
@@ -192,7 +280,19 @@ update_nametables:
 	sta tmp8
 
 	;;;;; now Do The STuff
+	; only draw the ones for the direction you are moving..!!
+	lda scroll_dir
+	cmp #$00
+	beq :+
+	jsr update_right_seam
+	jmp :++
+:
+	jsr update_left_seam
+:
+	; whew
+	rts
 
+update_right_seam:
 	;;; nt0 right seam (x = 0) nt0_buf0
 	; select the address...!
 	lda #.hibyte(nt0)
@@ -216,7 +316,10 @@ update_nametables:
 	lda nt2_buf0+I
 	sta ppudata
 .endrepeat
+	
+	rts
 
+update_left_seam:
 	; move over the column for the left seam now lol
 	inc tmp8
 	lda tmp8
@@ -246,7 +349,7 @@ update_nametables:
 	lda nt2_buf1+I
 	sta ppudata
 .endrepeat
-	; whew
+
 	rts
 
 ; handler for the main game screen
@@ -292,6 +395,17 @@ game_handler:
 	; update oam for next frame
 	jsr clear_oam
 	jsr iterate_entities
+
+	; render the scroll seam for next frame
+	; draw whichever one depending on the direction you're moving
+	lda scroll_dir
+	cmp #$00
+	beq :+
+	jsr draw_scroll_buffer_right
+	jmp :++
+:
+	jsr draw_scroll_buffer_left
+:
 
 	; await the start button
 	lda pad_press

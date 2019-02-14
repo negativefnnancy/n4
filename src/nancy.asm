@@ -247,6 +247,8 @@ nancy_entity_handler:
 	cmp #$40
 	bcs :+
 	; move cam left
+	lda #$00
+	sta scroll_dir
 	dec cam_x
 	; and check for overflow
 	bne @cam_done_x
@@ -266,6 +268,8 @@ nancy_entity_handler:
 	cmp #$c0
 	bcc :+
 	; move cam right
+	lda #$01
+	sta scroll_dir
 	inc cam_x
 	; and check for overflow
 	bne @cam_done_x

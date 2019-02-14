@@ -30,6 +30,9 @@ cam_x:		.res 1
 cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
+; scroll direction
+scroll_dir:	.res 1 ; 0 = left; >0 = right
+
 .segment "STACK"
 ; also, use part of the stack page for nametable update buffers
 nt0_buf0:	.res 30

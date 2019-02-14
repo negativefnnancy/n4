@@ -78,6 +78,19 @@ buffer_bg:
 	rol
 	and #$03
 	sta tmp8+1
+	; and account for passing the bottom of the first nametable
+	; if the camera is passed the first name table, jump to the second
+	lda cam_y
+	cmp #240
+	bcc :+
+	lda #$40
+	clc
+	adc tmp8
+	sta tmp8
+	lda #$04
+	adc tmp8+1
+	sta tmp8+1
+:
 
 	;;; HORIZONTAL BUFFER
 
@@ -92,16 +105,19 @@ buffer_bg:
 	adc #.hibyte(nt0)
 	sta ppuaddr
 	lda tmp8
+	and #$e0	; align with the horizontal edge of the screen
 	clc
 	adc #.lobyte(nt0)
-	and #$e0	; align with the horizontal edge of the screen
 	sta ppuaddr
 
 	; put data
 	lda #$20
 	sta tmp9
 :
-	lda tmp9
+	lda global_timer
+	and #$1
+	clc
+	adc tmp9
 	sta ppudata
 	dec tmp9
 	bne :-
@@ -117,12 +133,10 @@ buffer_bg:
 	lda #.hibyte(nt0)
 	sta ppuaddr
 	lda tmp8
-	clc
-	adc #.lobyte(nt0)
 	and #$1f	; align with the vertical edge of the screen
 	sta ppuaddr
 
-	; put data
+	; put data on first nametable
 	lda #$1e
 	sta tmp9
 :

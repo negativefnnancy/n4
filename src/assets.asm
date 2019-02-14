@@ -87,7 +87,7 @@
 		table:	.word null
 	.endscope
 	.scope nancy
-		walk_frames	= $06
+		walk_frames	= $01
 		idle_north:
 			.byte $01, $00
 			.byte $01, $00, $00

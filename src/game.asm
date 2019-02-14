@@ -10,10 +10,6 @@ enter_game:
 	lda #$02
 	sta state
 
-	; load the test background nametable
-	st16 tmp0, nt::test
-	jsr load_nametable
-
 	; load the sprite palette
 	st16 tmp0, pal::fg::day
 	jsr load_fg_palette
@@ -44,6 +40,14 @@ enter_game:
 	st16 tmp2, $100
 	jsr copy
 
+	; now that the map is loaded
+	; render it to the bg map
+	;jsr draw_map
+	; tmprary
+	st16 tmp0, nt::test
+	jsr load_nametable
+
+
 	; reset scrolling
 	lda #$00
 	sta ppuscroll
@@ -54,6 +58,43 @@ enter_game:
 	sta ppuctrl
 	lda #$18	; show sprites and bg
 	sta ppumask
+	rts
+
+; draw the entire bg map
+draw_map:
+	;;; note: assuming ppu is off and horizontal increment mode
+	; its 32 by 30 soooo
+	; lets just loop over the first name table....
+	; latch the ppu address
+	bit ppustatus
+	lda #.hibyte(nt0)
+	sta ppuaddr
+	lda #.lobyte(nt0)
+	sta ppuaddr
+
+	; y !
+	lda #$00
+	sta tmp8
+:
+	; x !
+	lda #$00
+	sta tmp8+1
+:
+	; inner loop with x and y:
+	lda #$23
+	sta ppudata
+
+	; done inner loop
+	inc tmp8+1
+	lda tmp8+1
+	cmp #$20
+	bne :-
+
+	inc tmp8
+	lda tmp8
+	cmp #$1e
+	bne :--
+	
 	rts
 
 ; buffer the bg for scrolling
@@ -95,7 +136,6 @@ buffer_bg:
 	;;; HORIZONTAL BUFFER
 
 	; enable the ppu
-	bit ppustatus
 	lda #$88	; enable nmi and use second chr page for sprites
 	sta ppuctrl
 	
@@ -125,7 +165,6 @@ buffer_bg:
 	;;; VERTICAL BUFFER
 
 	; enable the ppu
-	bit ppustatus
 	lda #$8c	; enable nmi and use second chr page for sprites
 	sta ppuctrl
 

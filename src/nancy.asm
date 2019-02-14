@@ -1,5 +1,5 @@
 ; constants for nancy!
-nancy_walk_step_size	= $0030
+nancy_walk_step_size	= $000c ; $0030
 
 ; make mancy move horizontally dude
 ; tmp8 = offset
@@ -120,7 +120,7 @@ nancy_entity_handler:
 	; bc otherwise it looks awkward lol
 	lda entities+Entity::timer, y
 	cmp #$00
-	bne @skip_move	
+	;bne @skip_move	
 	; ok now we've been synced, lets see what buttons are pressed
 	lda pad
 	and #%00000001

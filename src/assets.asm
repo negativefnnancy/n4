@@ -57,40 +57,75 @@ metatiles:
 	null:
 		.byte $00
 	nancy_north_1:
+		.byte $04
+		.byte $00, $02, $00, $00
+		.byte $00, $02, $40, $08
+		.byte $08, $12, $00, $00
+		.byte $08, $12, $40, $08
 	nancy_south_1:
-	nancy_east_1:
-	nancy_west_1:
 		.byte $04
 		.byte $00, $00, $00, $00
 		.byte $00, $00, $40, $08
 		.byte $08, $10, $00, $00
 		.byte $08, $10, $40, $08
+	nancy_east_1:
+		.byte $04
+		.byte $00, $04, $40, $08
+		.byte $00, $05, $40, $00
+		.byte $08, $14, $40, $08
+		.byte $08, $15, $40, $00
+	nancy_west_1:
+		.byte $04
+		.byte $00, $04, $00, $00
+		.byte $00, $05, $00, $08
+		.byte $08, $14, $00, $00
+		.byte $08, $15, $00, $08
+
 	nancy_north_2:
+		.byte $04
+		.byte $00, $03, $40, $00
+		.byte $00, $03, $00, $08
+		.byte $08, $13, $40, $00
+		.byte $08, $08, $40, $08
 	nancy_south_2:
+		.byte $04
+		.byte $00, $03, $40, $00
+		.byte $00, $03, $00, $08
+		.byte $08, $13, $40, $00
+		.byte $08, $08, $40, $08
 	nancy_east_2:
+		.byte $04
+		.byte $00, $06, $40, $08
+		.byte $00, $07, $40, $00
+		.byte $08, $16, $40, $08
+		.byte $08, $17, $40, $00
 	nancy_west_2:
 		.byte $04
-		.byte $00, $01, $40, $00
-		.byte $00, $01, $00, $08
-		.byte $08, $11, $40, $00
-		.byte $08, $12, $40, $08
+		.byte $00, $06, $00, $00
+		.byte $00, $07, $00, $08
+		.byte $08, $16, $00, $00
+		.byte $08, $17, $00, $08
+
 	nancy_north_3:
-	nancy_south_3:
-	nancy_east_3:
-	nancy_west_3:
 		.byte $04
-		.byte $00, $01, $40, $00
-		.byte $00, $01, $00, $08
-		.byte $08, $12, $00, $00
-		.byte $08, $11, $00, $08
+		.byte $00, $03, $40, $00
+		.byte $00, $03, $00, $08
+		.byte $08, $08, $00, $00
+		.byte $08, $13, $00, $08
+	nancy_south_3:
+		.byte $04
+		.byte $00, $03, $40, $00
+		.byte $00, $03, $00, $08
+		.byte $08, $08, $00, $00
+		.byte $08, $13, $00, $08
 
 	; lookup table of all the metasprites
 	table:
 		.word null
 		.word nancy_north_1, nancy_north_2, nancy_north_3
 		.word nancy_south_1, nancy_south_2, nancy_south_3
-		.word nancy_east_1, nancy_east_2, nancy_east_3
-		.word nancy_west_1, nancy_west_2, nancy_west_3
+		.word nancy_east_1, nancy_east_2
+		.word nancy_west_1, nancy_west_2
 .endscope
 
 ; animation sets
@@ -102,7 +137,7 @@ metatiles:
 		table:	.word null
 	.endscope
 	.scope nancy
-		walk_frames	= $01
+		walk_frames	= $06
 		idle_north:
 			.byte $01, $00
 			.byte $01, $00, $00
@@ -114,7 +149,7 @@ metatiles:
 			.byte $07, $00, $00
 		idle_west:
 			.byte $01, $00
-			.byte $0a, $00, $00
+			.byte $09, $00, $00
 		walk_north:
 			.byte $04, walk_frames
 			.byte $03, $00, $00
@@ -128,17 +163,13 @@ metatiles:
 			.byte $06, $00, $00
 			.byte $04, $00, $00
 		walk_east:
-			.byte $04, walk_frames
-			.byte $09, $00, $00
-			.byte $07, $00, $00
+			.byte $02, walk_frames
 			.byte $08, $00, $00
 			.byte $07, $00, $00
 		walk_west:
-			.byte $04, walk_frames
-			.byte $0b, $00, $00
+			.byte $02, walk_frames
 			.byte $0a, $00, $00
-			.byte $0c, $00, $00
-			.byte $0a, $00, $00
+			.byte $09, $00, $00
 
 		; table of all the animations for this entity
 		table:

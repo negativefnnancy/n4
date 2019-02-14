@@ -252,7 +252,7 @@ nancy_entity_handler:
 	bne @cam_done_x
 	; dec the high bits
 	lda cam_high
-	clc
+	sec
 	sbc #$10
 	and #$f0
 	sta tmp4
@@ -294,7 +294,7 @@ nancy_entity_handler:
 	sta cam_y
 	; dec the high bits
 	lda cam_high
-	clc
+	sec
 	sbc #$01
 	and #$0f
 	sta tmp4

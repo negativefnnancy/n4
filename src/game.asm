@@ -171,100 +171,88 @@ buffer_bg:
 	lsr	
 	sta tmp8
 	lda cam_y
+	lsr	
+	lsr	
+	lsr	
+	sta tmp8+1
+
+	;;; VERTICAL BUFFER
+
+	; increment vertically
+	lda #$8c
+	sta ppuctrl
+
+	; latch the ppu address
+	lda cam_high
+	and #$01
+	beq :+
+	; starting on the bottom name table
+	; store alt nametable
+	lda #.hibyte(nt2)
+	sta tmp3
+	; start on main nametable
+	lda #.hibyte(nt0)
+	sta ppuaddr
+	lda tmp8
+	sta ppuaddr
+	jmp :++
+:
+	; starting on the upper nametable
+	; store alt nametable
+	lda #.hibyte(nt0)
+	sta tmp3
+	; start on main nametable
+	lda #.hibyte(nt2)
+	sta ppuaddr
+	lda tmp8
+	sta ppuaddr
+:
+
+	; load the stuffs
+	lda #$00
+	sta tmp9
+:
+	cmp tmp8+1
+	bne :+
+	; switch to top table
+	lda cam_y
+	clc
 	rol
 	rol
 	and #$e0
 	clc
 	adc tmp8
-	sta tmp8
+	sta tmp4
 	lda cam_y
 	clc
 	rol
 	rol
 	rol
 	and #$03
-	sta tmp8+1
-	; and account for passing the bottom of the first nametable
-	; if the camera is passed the first name table, jump to the second
-	lda cam_y
-	cmp #240
-	bcc :+
-	lda #$40
 	clc
-	adc tmp8
-	sta tmp8
-	lda #$04
-	adc tmp8+1
-	sta tmp8+1
+	adc tmp3
+	sta ppuaddr
+	lda tmp4
+	sta ppuaddr
 :
-
-	;;; HORIZONTAL BUFFER
-
-	; enable the ppu
-	lda #$88	; enable nmi and use second chr page for sprites
-	sta ppuctrl
-	
-	; latch the ppu address
-	lda tmp8+1
-	clc
-	adc #.hibyte(nt0)
-	sta ppuaddr
-	lda tmp8
-	and #$e0	; align with the horizontal edge of the screen
-	clc
-	adc #.lobyte(nt0)
-	sta ppuaddr
-
-	; put data
-	lda #$20
-	sta tmp9
-	lda #$00
-	sta tmp9+1
-:
-	; x map coord
-	lda tmp9+1
-	sta tmpa+1	
-	; y map coord
-	lda #$00
-	sta tmpa
-	; now get the appropriate tile!
-	jsr get_tile
-	sta ppudata
-	inc tmp9+1
-	dec tmp9
-	bne :-
-
-	;;; VERTICAL BUFFER
-
-	; enable the ppu
-	lda #$8c	; enable nmi and use second chr page for sprites
-	sta ppuctrl
-
-	; latch the ppu address
-	lda #.hibyte(nt0)
-	sta ppuaddr
-	lda tmp8
-	and #$1f	; align with the vertical edge of the screen
-	sta ppuaddr
-
-	; put data on first nametable
-	lda #$1e
-	sta tmp9
-:
+	; load the byte
 	lda global_timer
-	and #$1
+	and #$3
 	clc
 	adc tmp9
 	sta ppudata
-	dec tmp9
-	bne :-
+	; next
+	inc tmp9
+	lda tmp9
+	cmp #$1e
+	bne :--
 
 	rts
 
 ; handler for the main game screen
 game_handler:
 	; bg scroll buffer!
-	;jsr buffer_bg
+	jsr buffer_bg
 
 	; copy oam
 	lda #.lobyte(oam)

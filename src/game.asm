@@ -42,71 +42,48 @@ enter_game:
 
 	; now that the map is loaded
 	; render it to the bg map
-	jsr wait_vblank
 	jsr draw_map
-
-	; reset scrolling
-	lda #$00
-	sta ppuscroll
-	sta ppuscroll
 
 	; enable the ppu
 	lda #$88	; enable nmi and use second chr page for sprites
 	sta ppuctrl
 	lda #$18	; show sprites and bg
 	sta ppumask
+
+	; reset scrolling
+	lda #$00
+	sta ppuscroll
+	sta ppuscroll
+
 	rts
 
-; load onta a the appropriate bg tile at screen coordinates
-; tmpa = y
-; tmpa+1 = x
-get_tile:
-	; x
-	lda tmpa+1
-	lsr
-	sta tmpb
-	; y
-	lda tmpa
-	rol
-	rol
-	rol
-	and #$f0
-	ora tmpb
-	sta tmpb
-	; now we have the map address
-	; get the metatile individual tile offset
-	lda tmpa+1
-	and #$01
-	sta tmpb+1
-	lda tmpa
-	rol
-	and #$02
-	ora tmpb+1
-	sta tmpb+1	
-	; load the metatile id from the map data
-	lda tmpb
-	tax
-	lda map, x	
-	; lookup the metatile
-	clc
-	rol
-	rol
-	clc
-	adc tmpb+1
-	tax
-	lda metatiles, x
- 
-	; go get em tiger
-	rts
-
-; draw the entire bg map
+; draw the entire bg map, both top and bottom nametables
 draw_map:
+	; first draw the top 
+	lda #$00
+	sta tmp8
+	jsr draw_map_part
+	; then draw the bottom
+	lda #$02
+	sta tmp8
+	jsr draw_map_part
+
+	rts
+
+; tmp8 = basenametable / map region
+draw_map_part:
+	jsr wait_vblank
+
 	;;; note: assuming ppu is off and horizontal increment mode
 	; its 32 by 30 soooo
-	; lets just loop over the first name table....
+	; lets just loop over whichever nametable we are supposed to be filling..!
 	; latch the ppu address
 	bit ppustatus
-	lda #.hibyte(nt0)
+	lda tmp8
+	clc
+	rol
+	rol
+	adc #.hibyte(nt0)
 	sta ppuaddr
 	lda #.lobyte(nt0)
 	sta ppuaddr
@@ -134,6 +111,55 @@ draw_map:
 	cmp #$1e
 	bne :--
 	
+	rts
+
+; load onta a the appropriate bg tile at screen coordinates
+; tmpa = y
+; tmpa+1 = x
+; tmp8 = quadrant : ) (just like nametable select)
+get_tile:
+	; x
+	lda tmpa+1
+	lsr
+	sta tmpb
+	; y
+	lda tmpa
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmpb
+	sta tmpb
+	; now we have the map address
+	; get the metatile individual tile offset
+	lda tmpa+1
+	and #$01
+	sta tmpb+1
+	lda tmpa
+	rol
+	and #$02
+	ora tmpb+1
+	sta tmpb+1	
+	; load the metatile id from the map data
+	lda tmp8
+	clc
+	adc #.hibyte(map)
+	sta tmp9+1
+	lda #$00
+	sta tmp9
+	lda tmpb
+	tay
+	lda (tmp9), y
+	; lookup the metatile
+	clc
+	rol
+	rol
+	clc
+	adc tmpb+1
+	tax
+	lda metatiles, x
+ 
+	; go get em tiger
 	rts
 
 ; buffer the bg for scrolling

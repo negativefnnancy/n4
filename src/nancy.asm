@@ -248,6 +248,18 @@ nancy_entity_handler:
 	bcs :+
 	; move cam left
 	dec cam_x
+	; and check for overflow
+	bne @cam_done_x
+	; dec the high bits
+	lda cam_high
+	clc
+	sbc #$10
+	and #$f0
+	sta tmp4
+	lda cam_high
+	and #$0f
+	ora tmp4
+	sta cam_high
 	jmp @cam_done_x
 :
 	lda tmp4
@@ -255,6 +267,18 @@ nancy_entity_handler:
 	bcc :+
 	; move cam right
 	inc cam_x
+	; and check for overflow
+	bne @cam_done_x
+	; inc the high bits
+	lda cam_high
+	clc
+	adc #$10
+	and #$f0
+	sta tmp4
+	lda cam_high
+	and #$0f
+	ora tmp4
+	sta cam_high
 :
 @cam_done_x:
 	lda tmp4+1
@@ -262,6 +286,18 @@ nancy_entity_handler:
 	bcs :+
 	; move cam up
 	dec cam_y
+	; and check for overflow
+	bne @cam_done_y
+	; dec the high bits
+	lda cam_high
+	clc
+	sbc #$01
+	and #$0f
+	sta tmp4
+	lda cam_high
+	and #$f0
+	ora tmp4
+	sta cam_high
 	jmp @cam_done_y
 :
 	lda tmp4+1
@@ -269,6 +305,18 @@ nancy_entity_handler:
 	bcc :+
 	; move cam down
 	inc cam_y
+	; and check for overflow
+	bne @cam_done_y
+	; inc the high bits
+	lda cam_high
+	clc
+	adc #$01
+	and #$0f
+	sta tmp4
+	lda cam_high
+	and #$f0
+	ora tmp4
+	sta cam_high
 :
 @cam_done_y:
 

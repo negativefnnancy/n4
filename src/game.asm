@@ -58,33 +58,33 @@ enter_game:
 	rts
 
 ; load onta a the appropriate bg tile at screen coordinates
-; tmp8 = y
-; tmp8+1 = x
+; tmpa = y
+; tmpa+1 = x
 get_tile:
 	; x
-	lda tmp8+1
+	lda tmpa+1
 	lsr
-	sta tmp9
+	sta tmpb
 	; y
-	lda tmp8
+	lda tmpa
 	rol
 	rol
 	rol
 	and #$f0
-	ora tmp9
-	sta tmp9
+	ora tmpb
+	sta tmpb
 	; now we have the map address
 	; get the metatile individual tile offset
-	lda tmp8+1
+	lda tmpa+1
 	and #$01
-	sta tmp9+1
-	lda tmp8
+	sta tmpb+1
+	lda tmpa
 	rol
 	and #$02
-	ora tmp9+1
-	sta tmp9+1	
+	ora tmpb+1
+	sta tmpb+1	
 	; load the metatile id from the map data
-	lda tmp9
+	lda tmpb
 	tax
 	lda map, x	
 	; lookup the metatile
@@ -92,12 +92,11 @@ get_tile:
 	rol
 	rol
 	clc
-	adc tmp9+1
+	adc tmpb+1
 	tax
 	lda metatiles, x
  
 	; go get em tiger
-	;lda #$24
 	rts
 
 ; draw the entire bg map
@@ -114,24 +113,24 @@ draw_map:
 
 	; y !
 	lda #$00
-	sta tmp8
+	sta tmpa
 :
 	; x !
 	lda #$00
-	sta tmp8+1
+	sta tmpa+1
 :
 	; inner loop with x and y:
 	jsr get_tile
 	sta ppudata
 
 	; done inner loop
-	inc tmp8+1
-	lda tmp8+1
+	inc tmpa+1
+	lda tmpa+1
 	cmp #$20
 	bne :-
 
-	inc tmp8
-	lda tmp8
+	inc tmpa
+	lda tmpa
 	cmp #$1e
 	bne :--
 	
@@ -193,12 +192,19 @@ buffer_bg:
 	; put data
 	lda #$20
 	sta tmp9
+	lda #$00
+	sta tmp9+1
 :
-	lda global_timer
-	and #$1
-	clc
-	adc tmp9
+	; x map coord
+	lda tmp9+1
+	sta tmpa+1	
+	; y map coord
+	lda #$00
+	sta tmpa
+	; now get the appropriate tile!
+	jsr get_tile
 	sta ppudata
+	inc tmp9+1
 	dec tmp9
 	bne :-
 

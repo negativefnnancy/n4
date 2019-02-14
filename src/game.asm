@@ -56,8 +56,91 @@ enter_game:
 	sta ppumask
 	rts
 
+; buffer the bg for scrolling
+buffer_bg:
+	; first get the vram address offset of the buffer origin
+	lda cam_x
+	lsr	
+	lsr	
+	lsr	
+	sta tmp8
+	lda cam_y
+	rol
+	rol
+	and #$e0
+	clc
+	adc tmp8
+	sta tmp8
+	lda cam_y
+	clc
+	rol
+	rol
+	rol
+	and #$03
+	sta tmp8+1
+
+	;;; HORIZONTAL BUFFER
+
+	; enable the ppu
+	bit ppustatus
+	lda #$88	; enable nmi and use second chr page for sprites
+	sta ppuctrl
+	
+	; latch the ppu address
+	lda tmp8+1
+	clc
+	adc #.hibyte(nt0)
+	sta ppuaddr
+	lda tmp8
+	clc
+	adc #.lobyte(nt0)
+	and #$e0	; align with the horizontal edge of the screen
+	sta ppuaddr
+
+	; put data
+	lda #$20
+	sta tmp9
+:
+	lda tmp9
+	sta ppudata
+	dec tmp9
+	bne :-
+
+	;;; VERTICAL BUFFER
+
+	; enable the ppu
+	bit ppustatus
+	lda #$8c	; enable nmi and use second chr page for sprites
+	sta ppuctrl
+
+	; latch the ppu address
+	lda #.hibyte(nt0)
+	sta ppuaddr
+	lda tmp8
+	clc
+	adc #.lobyte(nt0)
+	and #$1f	; align with the vertical edge of the screen
+	sta ppuaddr
+
+	; put data
+	lda #$1e
+	sta tmp9
+:
+	lda global_timer
+	and #$1
+	clc
+	adc tmp9
+	sta ppudata
+	dec tmp9
+	bne :-
+
+	rts
+
 ; handler for the main game screen
 game_handler:
+	; bg scroll buffer!
+	jsr buffer_bg
+
 	; copy oam
 	lda #.lobyte(oam)
 	sta oamaddr

@@ -35,6 +35,9 @@ move_nancy_y:
 ; remember y is the entity pointer
 ; so dont mess w it!
 nancy_entity_handler:
+
+;;;; MOVEMENT CONTROLS
+
 	; see if nancy needs any animation changes at all!
 	lda pad_change
 	and #$0f
@@ -151,6 +154,9 @@ nancy_entity_handler:
 	jsr move_nancy_y
 :
 @skip_move:
+
+
+;;;;; CAMERA FOLLOW NANCY
 
 	; ok we're gonna do a simpler camera scrolling effect
 	; simply move the camera in a direction if nancy is past it lol

@@ -238,7 +238,7 @@ buffer_bg:
 ; handler for the main game screen
 game_handler:
 	; bg scroll buffer!
-	jsr buffer_bg
+	;jsr buffer_bg
 
 	; copy oam
 	lda #.lobyte(oam)

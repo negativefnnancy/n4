@@ -143,7 +143,8 @@ metatiles:
 		table:	.word null
 	.endscope
 	.scope nancy
-		walk_frames	= $06
+		walk_frames	= $06	; speed
+		run_frames	= $03	; speed
 		idle_north:
 			.byte $01, $00
 			.byte $01, $00, $00
@@ -176,11 +177,32 @@ metatiles:
 			.byte $02, walk_frames
 			.byte $0a, $00, $00
 			.byte $09, $00, $00
+		run_north:
+			.byte $04, run_frames
+			.byte $03, $00, $00
+			.byte $01, $00, $00
+			.byte $02, $00, $00
+			.byte $01, $00, $00
+		run_south:
+			.byte $04, run_frames
+			.byte $05, $00, $00
+			.byte $04, $00, $00
+			.byte $06, $00, $00
+			.byte $04, $00, $00
+		run_east:
+			.byte $02, run_frames
+			.byte $08, $00, $00
+			.byte $07, $00, $00
+		run_west:
+			.byte $02, run_frames
+			.byte $0a, $00, $00
+			.byte $09, $00, $00
 
 		; table of all the animations for this entity
 		table:
 			.word idle_north, idle_south, idle_east, idle_west
 			.word walk_north, walk_south, walk_east, walk_west
+			.word run_north, run_south, run_east, run_west
 	.endscope
 
 	; lookup table of all the animation sets

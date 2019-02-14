@@ -1,5 +1,6 @@
 ; constants for nancy!
 nancy_walk_step_size	= $000c ; $0030
+nancy_run_step_size	= $0018 ; $0030
 
 ; make mancy move horizontally dude
 ; tmp8 = offset
@@ -82,35 +83,61 @@ nancy_entity_handler:
 @skip_stop_moving:
 
 	; see if nancy needs animation changes for movement!
-	lda pad_press
+	; see if run or walk first
+	lda pad
+	and #%01000000
+	beq :+
+	lda #$04
+	sta tmp8
+	jmp :++
+:
+	lda #$00
+	sta tmp8
+:
+	; make sure something relevant was newly pressed
+	lda pad_change
+	and #%01001111
+	beq @skip_start_moving
+	lda #$00
+	sta entities+Entity::timer, y
+	; so anyway
+	lda pad
 	and #%00000001
 	beq :+
 	; start moving right
 	lda #$06
+	clc
+	adc tmp8
 	sta entities+Entity::state, y
 	jmp @skip_start_moving
 :
-	lda pad_press
+	lda pad
 	and #%00000010
 	beq :+
 	; start moving left
 	lda #$07
+	clc
+	adc tmp8
 	sta entities+Entity::state, y
 	jmp @skip_start_moving
 :
-	lda pad_press
+	lda pad
 	and #%00000100
 	beq :+
 	; start moving down
 	lda #$05
+	clc
+	adc tmp8
 	sta entities+Entity::state, y
 	jmp @skip_start_moving
 :
-	lda pad_press
+	lda pad
 	and #%00001000
 	beq :+
 	; start moving up
 	lda #$04
+	clc
+	adc tmp8
 	sta entities+Entity::state, y
 :
 @skip_start_moving:
@@ -122,11 +149,21 @@ nancy_entity_handler:
 	cmp #$00
 	;bne @skip_move	
 	; ok now we've been synced, lets see what buttons are pressed
+	; see if run or walk first
+	lda pad
+	and #%01000000
+	beq :+
+	st16 tmp8, nancy_run_step_size	
+	st16 tmp9, -nancy_run_step_size	
+	jmp :++
+:
+	st16 tmp8, nancy_walk_step_size	
+	st16 tmp9, -nancy_walk_step_size	
+:
 	lda pad
 	and #%00000001
 	beq :+
 	; move right
-	st16 tmp8, nancy_walk_step_size	
 	jsr move_nancy_x
 	jmp @skip_move
 :
@@ -134,7 +171,10 @@ nancy_entity_handler:
 	and #%00000010
 	beq :+
 	; move left
-	st16 tmp8, -nancy_walk_step_size
+	lda tmp9
+	sta tmp8
+	lda tmp9+1
+	sta tmp8+1
 	jsr move_nancy_x
 	jmp @skip_move
 :
@@ -142,7 +182,6 @@ nancy_entity_handler:
 	and #%00000100
 	beq :+
 	; move down
-	st16 tmp8, nancy_walk_step_size
 	jsr move_nancy_y
 	jmp @skip_move
 :
@@ -150,7 +189,10 @@ nancy_entity_handler:
 	and #%00001000
 	beq :+
 	; move up
-	st16 tmp8, -nancy_walk_step_size
+	lda tmp9
+	sta tmp8
+	lda tmp9+1
+	sta tmp8+1
 	jsr move_nancy_y
 :
 @skip_move:

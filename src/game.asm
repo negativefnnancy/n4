@@ -42,11 +42,8 @@ enter_game:
 
 	; now that the map is loaded
 	; render it to the bg map
-	;jsr draw_map
-	; tmprary
-	st16 tmp0, nt::test
-	jsr load_nametable
-
+	jsr wait_vblank
+	jsr draw_map
 
 	; reset scrolling
 	lda #$00
@@ -58,6 +55,49 @@ enter_game:
 	sta ppuctrl
 	lda #$18	; show sprites and bg
 	sta ppumask
+	rts
+
+; load onta a the appropriate bg tile at screen coordinates
+; tmp8 = y
+; tmp8+1 = x
+get_tile:
+	; x
+	lda tmp8+1
+	lsr
+	sta tmp9
+	; y
+	lda tmp8
+	rol
+	rol
+	rol
+	and #$f0
+	ora tmp9
+	sta tmp9
+	; now we have the map address
+	; get the metatile individual tile offset
+	lda tmp8+1
+	and #$01
+	sta tmp9+1
+	lda tmp8
+	rol
+	and #$02
+	ora tmp9+1
+	sta tmp9+1	
+	; load the metatile id from the map data
+	lda tmp9
+	tax
+	lda map, x	
+	; lookup the metatile
+	clc
+	rol
+	rol
+	clc
+	adc tmp9+1
+	tax
+	lda metatiles, x
+ 
+	; go get em tiger
+	;lda #$24
 	rts
 
 ; draw the entire bg map
@@ -81,7 +121,7 @@ draw_map:
 	sta tmp8+1
 :
 	; inner loop with x and y:
-	lda #$23
+	jsr get_tile
 	sta ppudata
 
 	; done inner loop

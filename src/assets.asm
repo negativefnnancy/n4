@@ -48,9 +48,9 @@ metatiles:
 	.byte $3b, $43, $3b, $43	; east wall
 	.byte $40, $3c, $40, $3c	; west wall
 	.byte $30, $31, $40, $41	; northwest inner corner
-	.byte $33, $34, $43, $44	; northeast inner corner
+	.byte $32, $33, $42, $43	; northeast inner corner
 	.byte $50, $51, $25, $25	; southwest inner corner
-	.byte $52, $53, $22, $23	; southeast inner corner
+	.byte $52, $53, $25, $25	; southeast inner corner
 
 ; metasprites
 .scope metasprites

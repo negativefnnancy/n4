@@ -37,6 +37,21 @@
 		.word ent::test
 .endscope
 
+; metatiles
+metatiles:
+	.byte $23, $23, $23, $23	; blank 0
+	.byte $24, $24, $24, $24	; blank 1
+	.byte $25, $25, $25, $25	; blank 2
+	.byte $26, $26, $26, $26	; blank 3
+	.byte $39, $39, $3a, $3a	; north wall
+	.byte $38, $38, $25, $25	; south wall
+	.byte $3b, $43, $3b, $43	; east wall
+	.byte $40, $3c, $40, $3c	; west wall
+	.byte $30, $31, $40, $41	; northwest inner corner
+	.byte $33, $34, $43, $44	; northeast inner corner
+	.byte $50, $51, $25, $25	; southwest inner corner
+	.byte $52, $53, $22, $23	; southeast inner corner
+
 ; metasprites
 .scope metasprites
 	null:

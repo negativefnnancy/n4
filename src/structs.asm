@@ -41,3 +41,11 @@
 	speed		.byte		; number of hardware frames per animation frame
 	frames		.tag Frame	; array of animation frames
 .endstruct
+
+; represents a meta tile
+.struct MetaTile
+	nw		.byte		; north west tile
+	ne		.byte		; north east tile
+	sw		.byte		; south west tile
+	se		.byte		; south east tile
+.endstruct

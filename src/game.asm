@@ -273,10 +273,26 @@ game_handler:
 	sta oamdma
 
 	; set camera?
+	; low bits
 	lda cam_x
 	sta ppuscroll
 	lda cam_y
 	sta ppuscroll
+	; high bits
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	and #$01
+	sta tmp4
+	lda cam_high
+	rol
+	and #$02
+	ora tmp4
+	clc
+	adc #$88
+	sta ppuctrl	
 
 	; update oam for next frame
 	jsr clear_oam

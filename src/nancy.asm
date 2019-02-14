@@ -287,7 +287,11 @@ nancy_entity_handler:
 	; move cam up
 	dec cam_y
 	; and check for overflow
+	lda cam_y
+	cmp #$ff
 	bne @cam_done_y
+	lda #239
+	sta cam_y
 	; dec the high bits
 	lda cam_high
 	clc
@@ -306,7 +310,11 @@ nancy_entity_handler:
 	; move cam down
 	inc cam_y
 	; and check for overflow
+	lda cam_y
+	cmp #240
 	bne @cam_done_y
+	lda #$00
+	sta cam_y
 	; inc the high bits
 	lda cam_high
 	clc

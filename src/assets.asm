@@ -23,6 +23,7 @@
 ; maps
 .scope map
 	room:			.incbin "room.map"
+	upstairs:		.incbin "upstairs.map"
 	test:			.incbin "test.map"
 .endscope
 
@@ -34,7 +35,7 @@
 ; areas
 .scope area
 	room:	; your bedroom
-		.word map::room
+		.word map::upstairs
 		.word ent::test
 .endscope
 
@@ -62,7 +63,7 @@ metatiles:
 
 
 	; $10
-	.byte $48, $4b, $25, $49	; southwest inner corner shadow
+	.byte $48, $4b, $25, $49	; southwest facing inner corner shadow
 	.byte $34, $35, $3b, $43	; northwest outer corner
 	.byte $36, $37, $40, $3c	; northeast outer corner
 	.byte $44, $45, $54, $3a	; southwest outer corner
@@ -85,6 +86,24 @@ metatiles:
 	.byte $55, $56, $25, $25	; north facing door
 	.byte $62, $63, $72, $73	; west facing door
 	.byte $64, $65, $74, $75	; east facing door
+	.byte $2b, $2b, $2d, $2d	; south gradient 1
+	.byte $2c, $2c, $23, $23	; south gradient 2
+	.byte $2d, $2d, $2b, $2b	; north gradient 1
+	.byte $23, $23, $2c, $2c	; north gradient 2
+	.byte $2d, $2b, $2d, $2b	; west gradient 1
+
+	; $28
+	.byte $23, $2c, $23, $2c	; west gradient 2
+	.byte $2b, $2d, $2b, $2d	; east gradient 1
+	.byte $2c, $23, $2c, $23	; east gradient 2
+	.byte $2c, $2c, $2c, $2d	; northwest gradient
+	.byte $2c, $2c, $2d, $2c	; northeast gradient
+	.byte $2c, $2d, $2c, $2c	; southwest gradient
+	.byte $2d, $2c, $2c, $2c	; southeast gradient
+	.byte $25, $4d, $25, $49	; west facing shadow of northwest outer corner
+
+	; 30
+	.byte $48, $4c, $25, $25	; south facing shadow of southeast outer corner
 
 ; metasprites
 .scope metasprites

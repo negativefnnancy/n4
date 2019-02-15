@@ -4,3 +4,5 @@
 .include "handlers.asm"
 .include "sprites.asm"
 .include "camera.asm"
+.include "ppu.asm"
+.include "map.asm"

@@ -37,11 +37,8 @@ scroll_dir:	.res 1 ; 0 = left; >0 = right
 scroll_y:	.res 2 ; low byte = scroll; high byte = base nametable (vertical)
 
 .segment "STACK"
-; also, use part of the stack page for nametable update buffers
-nt0_buf0:	.res 30
-nt0_buf1:	.res 30
-nt2_buf0:	.res 30
-nt2_buf1:	.res 30
+; also, use part of the stack page for vram update buffers
+scroll_buf:	.res 32
 
 .segment "BSS"
 entities:	.res $100	; entity table

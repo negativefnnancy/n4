@@ -49,6 +49,15 @@ enter_game:
 	st16 tmp2, $100
 	jsr copy
 
+	; reset scroll direction var
+	lda #$00
+	sta scroll_dir
+	
+	; init the camera
+	sta cam_x
+	sta cam_y
+	sta cam_high
+
 	; now that the map is loaded
 	; render it to the bg map
 	jsr draw_map
@@ -66,15 +75,6 @@ enter_game:
 	lda #$00
 	sta ppuscroll
 	sta ppuscroll
-
-	; reset scroll direction var
-	sta scroll_dir
-	
-	; init the camera
-	lda #$00
-	sta cam_x
-	sta cam_y
-	sta cam_high
 
 	rts
 

@@ -253,21 +253,6 @@ nancy_entity_handler:
 	ora tmp4+1
 	clc
 	sbc cam_y
-	; correct for 16 pixel gap between nametables....
-	sta tmpa
-	lda cam_high
-	and #$0f
-	php
-	sta tmpb
-	lda tmpa
-	plp
-:
-	beq :+
-	clc
-	adc #$10
-	dec tmpb
-	jmp :-
-:
 	sta tmp4+1
 
 	; ok we nancy's position on tmp4, now whats
@@ -325,13 +310,11 @@ nancy_entity_handler:
 	lda cam_y
 	cmp #$ff
 	bne @cam_done_y
-	lda #239
-	sta cam_y
 	; dec the high bits
 	lda cam_high
 	sec
 	sbc #$01
-	and #$01 ; and #$0f
+	and #$0f
 	sta tmp4
 	lda cam_high
 	and #$f0
@@ -345,16 +328,12 @@ nancy_entity_handler:
 	; move cam down
 	inc cam_y
 	; and check for overflow
-	lda cam_y
-	cmp #240
 	bne @cam_done_y
-	lda #$00
-	sta cam_y
 	; inc the high bits
 	lda cam_high
 	clc
 	adc #$01
-	and #$01 ; and #$0f
+	and #$0f
 	sta tmp4
 	lda cam_high
 	and #$f0

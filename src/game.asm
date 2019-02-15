@@ -69,6 +69,12 @@ enter_game:
 
 	; reset scroll direction var
 	sta scroll_dir
+	
+	; init the camera
+	lda #$00
+	sta cam_x
+	sta cam_y
+	sta cam_high
 
 	rts
 
@@ -405,7 +411,48 @@ game_handler:
 	; low bits
 	lda cam_x
 	sta ppuscroll
+	; cam y... we have to convert from a 256 base to a 240 base
+	; so check if the 12bit number is > 240
+	; then subtract 240 if so
+	; and loop.... (scary)
+	; first, see if the 12 bit number is > 240
+	; that is, high bits OR low bits are above what they should be
+	; first lets copy cam_y into a scratch var
 	lda cam_y
+	sta tmp4
+	lda cam_high
+	and #$0f
+	sta tmp4+1
+	; also keep track of dividend
+	lda #$00
+	sta tmp6
+:
+	; low bits first
+	lda tmp4
+	cmp #$f0
+	bcs :+
+	; low bits weren,t so check high bits
+	lda tmp4+1
+	beq :++
+; it is in fact above 240!!
+:
+	; now we subtract 240
+	lda tmp4
+	sec
+	sbc #$f0
+	sta tmp4
+	lda tmp4+1
+	sbc #$00
+	sta tmp4+1
+	; keep track of divident
+	inc tmp6
+	; now loop...
+	jmp :--
+	
+; done, or it wasnt above 240
+:
+	; so set y now that its been corrected...
+	lda tmp4
 	sta ppuscroll
 	; high bits
 	lda cam_high
@@ -414,13 +461,13 @@ game_handler:
 	lsr
 	lsr
 	and #$01
-	sta tmp4
-	lda cam_high
-	rol
-	and #$02
-	ora tmp4
+	sta tmp5
+	; dividend is new y high bits
+	lda tmp6
 	clc
-	adc #$88
+	rol
+	ora tmp5
+	ora #$88
 	sta ppuctrl	
 
 

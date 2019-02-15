@@ -168,6 +168,21 @@ entity_handler_return:
 	ora tmp4+1
 	clc
 	sbc cam_y
+	; correct for 16 pixel gap between nametables....
+	sta tmpa
+	lda cam_high
+	and #$0f
+	php
+	sta tmpb
+	lda tmpa
+	plp
+:
+	beq :+
+	clc
+	adc #$10
+	dec tmpb
+	jmp :-
+:
 	sta tmp4+1
 
 ;;;

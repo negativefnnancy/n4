@@ -183,6 +183,13 @@ nancy_entity_handler:
 	beq :+
 	; move down
 	jsr move_nancy_y
+	; wrap at 240
+	;lda entities+Entity::y_pos+1, y
+	;cmp #$0f
+	;bcs @skip_move
+	;sec
+	;sbc #$0f
+	;sta entities+Entity::y_pos+1, y
 	jmp @skip_move
 :
 	lda pad
@@ -194,6 +201,13 @@ nancy_entity_handler:
 	lda tmp9+1
 	sta tmp8+1
 	jsr move_nancy_y
+	; wrap at 240
+	;lda entities+Entity::y_pos+1, y
+	;cmp #$0f
+	;bcs @skip_move
+	;sec
+	;sbc #$01
+	;sta entities+Entity::y_pos+1, y
 :
 @skip_move:
 
@@ -239,6 +253,21 @@ nancy_entity_handler:
 	ora tmp4+1
 	clc
 	sbc cam_y
+	; correct for 16 pixel gap between nametables....
+	sta tmpa
+	lda cam_high
+	and #$0f
+	php
+	sta tmpb
+	lda tmpa
+	plp
+:
+	beq :+
+	clc
+	adc #$10
+	dec tmpb
+	jmp :-
+:
 	sta tmp4+1
 
 	; ok we nancy's position on tmp4, now whats
@@ -302,7 +331,7 @@ nancy_entity_handler:
 	lda cam_high
 	sec
 	sbc #$01
-	and #$0f
+	and #$01 ; and #$0f
 	sta tmp4
 	lda cam_high
 	and #$f0
@@ -325,7 +354,7 @@ nancy_entity_handler:
 	lda cam_high
 	clc
 	adc #$01
-	and #$0f
+	and #$01 ; and #$0f
 	sta tmp4
 	lda cam_high
 	and #$f0

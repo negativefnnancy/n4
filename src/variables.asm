@@ -30,8 +30,11 @@ cam_x:		.res 1
 cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
-; scroll direction
-scroll_dir:	.res 1 ; xxxxxxx0 = left, xxxxxxx1 = right, xxxxxx0x = up, xxxxxx1x = down
+; scroll buffer direction
+scroll_dir:	.res 1 ; 0 = left; >0 = right
+
+; ppu scroll
+scroll_y:	.res 2 ; low byte = scroll; high byte = base nametable (vertical)
 
 .segment "STACK"
 ; also, use part of the stack page for nametable update buffers

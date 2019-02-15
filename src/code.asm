@@ -3,3 +3,4 @@
 .include "vectors.asm"
 .include "handlers.asm"
 .include "sprites.asm"
+.include "camera.asm"

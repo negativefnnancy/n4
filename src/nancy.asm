@@ -257,90 +257,30 @@ nancy_entity_handler:
 
 	; ok we nancy's position on tmp4, now whats
 	; now we need to check if its past certain boundaries
+	; Horizontal scroll?
 	lda tmp4
 	cmp #$40
 	bcs :+
-	; move cam left
-	lda #$00
-	sta scroll_dir
-	dec cam_x
-	; and check for overflow
-	lda cam_x
-	cmp #$ff
-	bne @cam_done_x
-	; dec the high bits
-	lda cam_high
-	sec
-	sbc #$10
-	and #$f0
-	sta tmp4
-	lda cam_high
-	and #$0f
-	ora tmp4
-	sta cam_high
-	jmp @cam_done_x
+	jsr move_cam_left
+	jmp :++
 :
 	lda tmp4
 	cmp #$c0
 	bcc :+
-	; move cam right
-	lda #$01
-	sta scroll_dir
-	inc cam_x
-	; and check for overflow
-	bne @cam_done_x
-	; inc the high bits
-	lda cam_high
-	clc
-	adc #$10
-	and #$f0
-	sta tmp4
-	lda cam_high
-	and #$0f
-	ora tmp4
-	sta cam_high
+	jsr move_cam_right
 :
-@cam_done_x:
+	; Vertical scroll?
 	lda tmp4+1
 	cmp #$40
 	bcs :+
-	; move cam up
-	dec cam_y
-	; and check for overflow
-	lda cam_y
-	cmp #$ff
-	bne @cam_done_y
-	; dec the high bits
-	lda cam_high
-	sec
-	sbc #$01
-	and #$0f
-	sta tmp4
-	lda cam_high
-	and #$f0
-	ora tmp4
-	sta cam_high
-	jmp @cam_done_y
+	jsr move_cam_up
+	jmp :++
 :
 	lda tmp4+1
 	cmp #$a0
 	bcc :+
-	; move cam down
-	inc cam_y
-	; and check for overflow
-	bne @cam_done_y
-	; inc the high bits
-	lda cam_high
-	clc
-	adc #$01
-	and #$0f
-	sta tmp4
-	lda cam_high
-	and #$f0
-	ora tmp4
-	sta cam_high
+	jsr move_cam_down
 :
-@cam_done_y:
 
 	; all done here! bye bye nancy ;)
 	jmp entity_handler_return

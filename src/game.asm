@@ -49,14 +49,8 @@ enter_game:
 	st16 tmp2, $100
 	jsr copy
 
-	; reset scroll direction var
-	lda #$00
-	sta scroll_dir
-	
-	; init the camera
-	sta cam_x
-	sta cam_y
-	sta cam_high
+	; reset scroll direction var and cam and ppu scroll vars
+	jsr reset_cam
 
 	; now that the map is loaded
 	; render it to the bg map
@@ -411,24 +405,14 @@ game_handler:
 	; low bits
 	lda cam_x
 	sta ppuscroll
-	; if < 240, do normally,
-	; else do somethin a bit different
-	lda cam_y
-	cmp #240
-	bcc :+
-	sec
-	sbc #240
+	lda scroll_y
 	sta ppuscroll
 	; high bits
-	lda #$8a	; next nametobl
+	lda scroll_y+1
+	rol
+	and #$02
+	ora #$88
 	sta ppuctrl	
-	jmp :++
-:
-	sta ppuscroll
-	; high bits
-	lda #$88
-	sta ppuctrl	
-:
 
 
 	;; POST VBLANK STUFF

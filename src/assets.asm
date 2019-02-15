@@ -35,7 +35,7 @@
 ; areas
 .scope area
 	room:	; your bedroom
-		.word map::upstairs
+		.word map::test
 		.word ent::test
 .endscope
 
@@ -104,6 +104,43 @@ metatiles:
 
 	; 30
 	.byte $48, $4c, $25, $25	; south facing shadow of southeast outer corner
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+
+	; 38
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+	.byte $00, $00, $00, $00	; placeholder
+
+	; 40 -- debug tiles
+	.byte $00, $00, $00, $00
+	.byte $01, $00, $00, $00
+	.byte $02, $00, $00, $00
+	.byte $03, $00, $00, $00
+	.byte $04, $00, $00, $00
+	.byte $05, $00, $00, $00
+	.byte $06, $00, $00, $00
+	.byte $07, $00, $00, $00
+
+	; 48
+	.byte $08, $00, $00, $00
+	.byte $09, $00, $00, $00
+	.byte $0a, $00, $00, $00
+	.byte $0b, $00, $00, $00
+	.byte $0c, $00, $00, $00
+	.byte $0d, $00, $00, $00
+	.byte $0e, $00, $00, $00
+	.byte $0f, $00, $00, $00
 
 ; metasprites
 .scope metasprites

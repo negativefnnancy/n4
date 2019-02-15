@@ -210,14 +210,28 @@ get_tile:
 	lda tmpb
 	tay
 	lda (tmp9), y
-	; lookup the metatile
+	; now we have the metatile id
+	; turn it into an offset by x4'ing it
+	; and add it to the metatiles base address
+	sta tmpc ; save the metatile id
 	clc
 	rol
 	rol
 	clc
-	adc tmpb+1
-	tax
-	lda metatiles, x
+	adc #.lobyte(metatiles)
+	php
+	sta tmpd
+	lda tmpc
+	rol
+	rol
+	rol
+	and #$03
+	plp
+	adc #.hibyte(metatiles)
+	sta tmpd+1
+	lda tmpb+1
+	tay
+	lda (tmpd), y
  
 	; go get em tiger
 	rts

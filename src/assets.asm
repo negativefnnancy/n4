@@ -22,6 +22,7 @@
 
 ; maps
 .scope map
+	room:			.incbin "room.map"
 	test:			.incbin "test.map"
 .endscope
 
@@ -32,13 +33,14 @@
 
 ; areas
 .scope area
-	test:
-		.word map::test
+	room:	; your bedroom
+		.word map::room
 		.word ent::test
 .endscope
 
 ; metatiles
 metatiles:
+	; $00
 	.byte $23, $23, $23, $23	; blank 0
 	.byte $24, $24, $24, $24	; blank 1
 	.byte $25, $25, $25, $25	; blank 2
@@ -47,6 +49,8 @@ metatiles:
 	.byte $38, $38, $25, $25	; north facing wall
 	.byte $3b, $43, $3b, $43	; west facing wall
 	.byte $40, $3c, $40, $3c	; east facing wall
+
+	; $08
 	.byte $30, $31, $40, $41	; northwest inner corner
 	.byte $32, $33, $42, $43	; northeast inner corner
 	.byte $50, $51, $25, $25	; southwest inner corner
@@ -56,7 +60,31 @@ metatiles:
 	.byte $48, $48, $25, $25	; south facing shadow
 	.byte $25, $49, $25, $49	; west facing shadow
 
+
+	; $10
 	.byte $48, $4b, $25, $49	; southwest inner corner shadow
+	.byte $34, $35, $3b, $43	; northwest outer corner
+	.byte $36, $37, $40, $3c	; northeast outer corner
+	.byte $44, $45, $54, $3a	; southwest outer corner
+	.byte $46, $47, $3a, $57	; southeast outer corner
+	.byte $25, $4a, $25, $25	; southwest outter corner shadow
+	.byte $6b, $63, $7b, $73	; west facing window on wall
+	.byte $25, $49, $25, $7a	; west facing window shadow
+
+	; $18
+	.byte $6d, $43, $7d, $43	; west facing bookshelve against wall
+	.byte $25, $6c, $25, $7c	; west facing bookshelf shadow
+	.byte $40, $3c, $40, $6a	; east facing wall with picture
+	.byte $39, $39, $66, $67	; south facing wall w left end table
+	.byte $76, $77, $25, $25	; south facing wall w left end table shadow
+	.byte $39, $39, $68, $69	; south facing wall w right end table
+	.byte $78, $79, $25, $25	; south facing wall w right end table shadow
+	.byte $60, $61, $70, $71	; south facing door
+
+	; $20
+	.byte $55, $56, $25, $25	; north facing door
+	.byte $62, $63, $72, $73	; west facing door
+	.byte $64, $65, $74, $75	; east facing door
 
 ; metasprites
 .scope metasprites

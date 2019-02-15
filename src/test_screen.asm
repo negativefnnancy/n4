@@ -47,7 +47,7 @@ test_screen_handler:
 	beq :+
 	
 	; enter the main game engine
-	st16 tmp3, area::test
+	st16 tmp3, area::room
 	jsr enter_game
 :
 	rti

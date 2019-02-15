@@ -141,7 +141,14 @@ draw_scroll_buffer_right:
 	
 	; TOP table
 	; get quadrant
-	lda #$00	;tmp
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	clc
+	adc #$01
+	and #$01
 	sta tmp8
 	; set destination
 	st16 tmp3, nt0_buf0
@@ -150,7 +157,16 @@ draw_scroll_buffer_right:
 
 	; BOTTOM table
 	; get quadrant
-	lda #$02	;tmp
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	clc
+	adc #$01
+	and #$01
+	clc
+	adc #$02
 	sta tmp8
 	; set destination
 	st16 tmp3, nt2_buf0
@@ -167,6 +183,8 @@ draw_scroll_buffer_left:
 	lda cam_x
 	clc
 	adc #$08
+	php
+	php
 	lsr
 	lsr
 	lsr
@@ -174,7 +192,14 @@ draw_scroll_buffer_left:
 	
 	; TOP table
 	; get quadrant
-	lda #$00	;tmp
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	plp
+	adc #$00
+	and #$01
 	sta tmp8
 	; set destination
 	st16 tmp3, nt0_buf1
@@ -183,7 +208,16 @@ draw_scroll_buffer_left:
 
 	; BOTTOM table
 	; get quadrant
-	lda #$02	;tmp
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	plp
+	adc #$00
+	and #$01
+	clc
+	adc #$02
 	sta tmp8
 	; set destination
 	st16 tmp3, nt2_buf1

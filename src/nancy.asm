@@ -251,6 +251,8 @@ nancy_entity_handler:
 	sta scroll_dir
 	dec cam_x
 	; and check for overflow
+	lda cam_x
+	cmp #$ff
 	bne @cam_done_x
 	; dec the high bits
 	lda cam_high

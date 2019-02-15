@@ -411,64 +411,24 @@ game_handler:
 	; low bits
 	lda cam_x
 	sta ppuscroll
-	; cam y... we have to convert from a 256 base to a 240 base
-	; so check if the 12bit number is > 240
-	; then subtract 240 if so
-	; and loop.... (scary)
-	; first, see if the 12 bit number is > 240
-	; that is, high bits OR low bits are above what they should be
-	; first lets copy cam_y into a scratch var
+	; if < 240, do normally,
+	; else do somethin a bit different
 	lda cam_y
-	sta tmp4
-	lda cam_high
-	and #$0f
-	sta tmp4+1
-	; also keep track of dividend
-	lda #$00
-	sta tmp6
-:
-	; low bits first
-	lda tmp4
-	cmp #$f0
-	bcs :+
-	; low bits weren,t so check high bits
-	lda tmp4+1
-	beq :++
-; it is in fact above 240!!
-:
-	; now we subtract 240
-	lda tmp4
+	cmp #240
+	bcc :+
 	sec
-	sbc #$f0
-	sta tmp4
-	lda tmp4+1
-	sbc #$00
-	sta tmp4+1
-	; keep track of divident
-	inc tmp6
-	; now loop...
-	jmp :--
-	
-; done, or it wasnt above 240
-:
-	; so set y now that its been corrected...
-	lda tmp4
+	sbc #240
 	sta ppuscroll
 	; high bits
-	lda cam_high
-	lsr
-	lsr
-	lsr
-	lsr
-	and #$01
-	sta tmp5
-	; dividend is new y high bits
-	lda tmp6
-	clc
-	rol
-	ora tmp5
-	ora #$88
+	lda #$8a	; next nametobl
 	sta ppuctrl	
+	jmp :++
+:
+	sta ppuscroll
+	; high bits
+	lda #$88
+	sta ppuctrl	
+:
 
 
 	;; POST VBLANK STUFF

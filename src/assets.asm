@@ -24,6 +24,7 @@
 .scope map
 	room:			.incbin "room.map"
 	upstairs:		.incbin "upstairs.map"
+	downstairs:		.incbin "downstairs.map"
 	test:			.incbin "test.map"
 .endscope
 
@@ -35,7 +36,7 @@
 ; areas
 .scope area
 	room:	; your bedroom
-		.word map::test
+		.word map::downstairs
 		.word ent::test
 .endscope
 

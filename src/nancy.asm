@@ -217,71 +217,103 @@ nancy_entity_handler:
 	; ok we're gonna do a simpler camera scrolling effect
 	; simply move the camera in a direction if nancy is past it lol
 
-	; get the entity's x position
-	; maybe this can be done better??
-	lda entities+Entity::x_pos, y
-	lsr
-	lsr
-	lsr
-	lsr
-	sta tmp4
-	lda entities+Entity::x_pos+1, y
+	; get cam 16bit x
+	lda cam_x
 	rol
 	rol
 	rol
 	rol
 	and #$f0
-	ora tmp4
-	clc
-	sbc cam_x
-	sta tmp4
+	sta tmp3
+	lda cam_x
+	lsr
+	lsr
+	lsr
+	lsr
+	sta tmp3+1
+	lda cam_high
+	and #$f0
+	ora tmp3+1
+	sta tmp3+1
 
-	; get the entity's y position
-	; maybe this can be done better??
-	lda entities+Entity::y_pos, y
+	; get cam 16bit y
+	lda cam_y
+	rol
+	rol
+	rol
+	rol
+	and #$f0
+	sta tmp4
+	lda cam_y
 	lsr
 	lsr
 	lsr
 	lsr
 	sta tmp4+1
-	lda entities+Entity::y_pos+1, y
+	lda cam_high
 	rol
 	rol
 	rol
 	rol
 	and #$f0
 	ora tmp4+1
-	clc
-	sbc cam_y
 	sta tmp4+1
 
-	; ok we nancy's position on tmp4, now whats
+	; get nancy delta x
+	lda entities+Entity::x_pos, y
+	sec
+	sbc tmp3
+	sta tmp3
+	lda entities+Entity::x_pos+1, y
+	sbc tmp3+1
+	sta tmp3+1
+
+	; get nancy delta y
+	lda entities+Entity::y_pos, y
+	sec
+	sbc tmp4
+	sta tmp4
+	lda entities+Entity::y_pos+1, y
+	sbc tmp4+1
+	sta tmp4+1
+
+	; ok nancy delta on tmp3 and tmp4
 	; now we need to check if its past certain boundaries
 	; Horizontal scroll?
-	lda tmp4
-	cmp #$40
-	bcs :+
+	lda tmp3+1
+	cmp #$04
+	bcs :++
+:
 	lda #$ff
 	sta cam_move_x
 	jmp :++
 :
-	lda tmp4
-	cmp #$c0
+	lda tmp3+1
+	cmp #$0c
 	bcc :+
+	; check sign bit first...
+	; cheap hax m8
+	and #$80
+	bne :--
 	lda #1
 	sta cam_move_x
 :
 	; Vertical scroll?
 	lda tmp4+1
-	cmp #$40
-	bcs :+
+	cmp #$04
+	bcs :++
+:
 	lda #$ff
 	sta cam_move_y
 	jmp :++
 :
 	lda tmp4+1
-	cmp #$a0
+	cmp #$0a
 	bcc :+
+	; check sign bit first...
+	; cheap hax m8
+	and #$80
+	bne :--
 	lda #1
 	sta cam_move_y
 :

@@ -261,25 +261,29 @@ nancy_entity_handler:
 	lda tmp4
 	cmp #$40
 	bcs :+
-	jsr move_cam_left
+	lda #$ff
+	sta cam_move_x
 	jmp :++
 :
 	lda tmp4
 	cmp #$c0
 	bcc :+
-	jsr move_cam_right
+	lda #1
+	sta cam_move_x
 :
 	; Vertical scroll?
 	lda tmp4+1
 	cmp #$40
 	bcs :+
-	jsr move_cam_up
+	lda #$ff
+	sta cam_move_y
 	jmp :++
 :
 	lda tmp4+1
 	cmp #$a0
 	bcc :+
-	jsr move_cam_down
+	lda #1
+	sta cam_move_y
 :
 
 	; all done here! bye bye nancy ;)

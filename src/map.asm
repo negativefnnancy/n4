@@ -65,26 +65,28 @@ draw_vertical_scroll_seam:
 	and #$02
 	sta tmp8
 
+	; set quadrant change
+	lda cam_x
+	clc
+	adc #$08
+	php
+	lsr
+	lsr
+	lsr
+	sta tmp7
+
 	; set quadrant
 	lda cam_high
 	lsr
 	lsr
 	lsr
 	lsr
+	plp
+	adc #$00
 	and #$01
 	clc
 	adc tmp8	; change to ora?
 	sta tmp8
-
-	; set quadrant change
-	lda cam_x
-	; account for the 1st column disabled...
-	clc
-	adc #$08
-	lsr
-	lsr
-	lsr
-	sta tmp7
 
 	; sweep the x direction
 :

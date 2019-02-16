@@ -94,6 +94,9 @@ prepare_for_vblank:
 	jsr clear_oam
 	jsr iterate_entities
 
+	; camera movement engine
+	jsr move_cam
+
 	;; buffer vram updates!!!
 
 	lda scroll_dir

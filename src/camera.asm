@@ -7,7 +7,63 @@ reset_cam:
 	sta cam_x
 	sta cam_y
 	sta cam_high
+	sta cam_move_x
+	sta cam_move_y
+	sta cam_move_alt
+return:
 	rts
+
+; master camera movement logic
+; call once per frame
+move_cam:
+	; if theres no x to move, move y
+	lda cam_move_x
+	cmp #$00
+	beq move_cam_y
+	; if theres no y to move, move x
+	lda cam_move_y
+	cmp #$00
+	beq move_cam_x
+	; otherwise alternate between the x and y queues
+	lda cam_move_alt
+	eor #$ff
+	sta cam_move_alt
+	bne move_cam_y
+	jmp move_cam_x
+
+; handle the cam y movemente queue
+move_cam_y:
+	lda cam_move_y
+	cmp #$00
+	beq return
+	; move cam y
+	; negative?
+	and #$80
+	bne :+
+	; positive
+	dec cam_move_y
+	jmp move_cam_down
+:
+	; negative
+	inc cam_move_y
+	jmp move_cam_up
+
+; handle the cam x movemente queue
+move_cam_x:
+	lda cam_move_x
+	cmp #$00
+	beq return
+	; move cam x
+	; negative?
+	and #$80
+	bne :+
+	; positive
+	dec cam_move_x
+	jmp move_cam_right
+:
+	; negative
+	inc cam_move_x
+	jmp move_cam_left
 
 ; move camera 1 pixel to the right
 move_cam_right:

@@ -32,6 +32,12 @@ cam_x:		.res 1
 cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
+; camera movement "queue"
+; put number here and it will scroll to that point 1 pixel at a time
+cam_move_x:	.res 1
+cam_move_y:	.res 1
+cam_move_alt:	.res 1
+
 ; scroll buffer direction
 scroll_dir:	.res 1 ; 0 = left; 1 = right; 2 = up; else = down
 

@@ -31,33 +31,32 @@ update_vram:
 	; but only for one direction!
 	; so every frame 60+32 bytes will be updated
 
-;	; first things first
-;	; set things up for vertical increments
-;	lda #$8c
-;	sta ppuctrl
-;	; and figure out the x offset!
-;	lda cam_x
-;	lsr
-;	lsr
-;	lsr
-;	sta tmp8
-;
-;	;;;;; now Do The STuff
-;	; only draw the ones for the direction you are moving..!!
-;	lda scroll_dir
-;	cmp #$00
-;	beq :+
-;	jsr update_right_seam
-;	jmp :++
-;:
-;	jsr update_left_seam
-;:
+	;; VERTICAL SCROLL SEAM
+
+	; set things up for horizontal increments
+	lda #$88
+	sta ppuctrl
+
+	; do y scroll seam update
+	lda scroll_dir
+	and #$02
+	bne :+
+	jsr copy_up_seam
+	jmp :++
+:
+	jsr copy_down_seam
+:
+
+	;; HORIZONTAL SCROLL SEAM
+
 	; set things up for vertical increments
 	lda #$8c
 	sta ppuctrl
-	jmp copy_left_seam;tmp
-	; whew
-	rts
+
+	; do x scroll seam update
+	lda scroll_dir
+	and #$01
+	bne copy_right_seam
 
 copy_left_seam:
 	; left seam is at the scroll position + 1 (first column is disabled) (both name tables)
@@ -98,7 +97,7 @@ copy_horizontal_seam:
 	sta ppuaddr
 
 	; and now do the copy
-	.repeat 32, I
+	.repeat 30, I
 		lda scroll_buf_x0+I
 		sta ppudata
 	.endrepeat
@@ -114,73 +113,13 @@ copy_horizontal_seam:
 	sta ppuaddr
 
 	; and now do the copy
-	.repeat 32, I
+	.repeat 30, I
 		lda scroll_buf_x1+I
 		sta ppudata
 	.endrepeat
 
 	; bye bye
 	rts
-
-;update_right_seam:
-;	;;; nt0 right seam (x = 0) nt0_buf0
-;	; select the address...!
-;	lda #.hibyte(nt0)
-;	sta ppuaddr
-;	lda tmp8
-;	sta ppuaddr
-;	; start loop......
-;.repeat 30, I
-;	lda nt0_buf0+I
-;	sta ppudata
-;.endrepeat
-;
-;	;;; nt2 right seam (x = 0) nt2_buf0
-;	; select the address...!
-;	lda #.hibyte(nt2)
-;	sta ppuaddr
-;	lda tmp8
-;	sta ppuaddr
-;	; start loop......
-;.repeat 30, I
-;	lda nt2_buf0+I
-;	sta ppudata
-;.endrepeat
-;	
-;	rts
-;
-;update_left_seam:
-;	; move over the column for the left seam now lol
-;	inc tmp8
-;	lda tmp8
-;	and #$1f
-;	sta tmp8
-;
-;	;;; nt0 left seam (x = 1) nt0_buf1
-;	; select the address...!
-;	lda #.hibyte(nt0)
-;	sta ppuaddr
-;	lda tmp8
-;	sta ppuaddr
-;	; start loop......
-;.repeat 30, I
-;	lda nt0_buf1+I
-;	sta ppudata
-;.endrepeat
-;
-;	;;; nt2 left seam (x = 1) nt2_buf1
-;	; select the address...!
-;	lda #.hibyte(nt2)
-;	sta ppuaddr
-;	lda tmp8
-;	sta ppuaddr
-;	; start loop......
-;.repeat 30, I
-;	lda nt2_buf1+I
-;	sta ppudata
-;.endrepeat
-;
-;	rts
 
 copy_up_seam:
 	; up seam is on current nametable at scroll position

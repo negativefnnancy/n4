@@ -44,6 +44,9 @@ scroll_dir:	.res 1 ; 0 = left; 1 = right; 2 = up; else = down
 ; ppu scroll
 scroll_y:	.res 2 ; low byte = scroll; high byte = base nametable (vertical)
 
+; current area object address
+cur_area:	.res 2
+
 .segment "STACK"
 ; also, use part of the stack page for vram update buffers
 scroll_buf_x:

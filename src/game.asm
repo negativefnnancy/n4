@@ -1,5 +1,5 @@
 ; setup the main game screen
-; tmp3 = area address
+; cur_area = area address
 enter_game:
 	; wait for vblank
 	jsr wait_vblank
@@ -29,10 +29,10 @@ enter_game:
 
 	; load the map data
 	ldy #Area::map
-	lda (tmp3), y
+	lda (cur_area), y
 	sta tmp0
 	iny
-	lda (tmp3), y
+	lda (cur_area), y
 	sta tmp0+1
 	st16 tmp1, map
 	st16 tmp2, $400
@@ -40,10 +40,10 @@ enter_game:
 
 	; load the entity table
 	ldy #Area::entities
-	lda (tmp3), y
+	lda (cur_area), y
 	sta tmp0
 	iny
-	lda (tmp3), y
+	lda (cur_area), y
 	sta tmp0+1
 	st16 tmp1, entities
 	st16 tmp2, $100

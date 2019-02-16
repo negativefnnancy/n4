@@ -33,18 +33,17 @@ cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
 ; scroll buffer direction
-scroll_dir:	.res 1 ; 0 = left; >0 = right
+scroll_dir:	.res 1 ; 0 = left/up; 1 = right/down; bit 0 = x; bit 1 = y
 
 ; ppu scroll
 scroll_y:	.res 2 ; low byte = scroll; high byte = base nametable (vertical)
 
 .segment "STACK"
 ; also, use part of the stack page for vram update buffers
-;scroll_buf:	.res 32
-nt0_buf0:	.res 30
-nt0_buf1:	.res 30
-nt2_buf0:	.res 30
-nt2_buf1:	.res 30
+scroll_buf_x:
+scroll_buf_x0:	.res 30
+scroll_buf_x1:	.res 30
+scroll_buf_y:	.res 32
 
 .segment "BSS"
 entities:	.res $100	; entity table

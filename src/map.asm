@@ -55,123 +55,123 @@ draw_map_part:
 	rts
 
 ; render the scroll buffer seam for loading into the nametable next frame
-draw_scroll_buffer_right:
-	;; RIGHT seam!
-
-	; get x coordinate
-	lda cam_x
-	lsr
-	lsr
-	lsr
-	sta tmpa+1
-	
-	; TOP table
-	; get quadrant
-	lda cam_high
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc #$01
-	and #$01
-	sta tmp8
-	; set destination
-	st16 tmp3, nt0_buf0
-	; do it
-	jsr draw_scroll_buffer_part
-
-	; BOTTOM table
-	; get quadrant
-	lda cam_high
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc #$01
-	and #$01
-	clc
-	adc #$02
-	sta tmp8
-	; set destination
-	st16 tmp3, nt2_buf0
-	; do it
-	jsr draw_scroll_buffer_part
-
-	rts
-
-draw_scroll_buffer_left:
-	;; LEFT seam!
-
-	; get x coordinate
-	; move it over 1 tile (and wrap around)
-	lda cam_x
-	clc
-	adc #$08
-	php
-	php
-	lsr
-	lsr
-	lsr
-	sta tmpa+1
-	
-	; TOP table
-	; get quadrant
-	lda cam_high
-	lsr
-	lsr
-	lsr
-	lsr
-	plp
-	adc #$00
-	and #$01
-	sta tmp8
-	; set destination
-	st16 tmp3, nt0_buf1
-	; do it
-	jsr draw_scroll_buffer_part
-
-	; BOTTOM table
-	; get quadrant
-	lda cam_high
-	lsr
-	lsr
-	lsr
-	lsr
-	plp
-	adc #$00
-	and #$01
-	clc
-	adc #$02
-	sta tmp8
-	; set destination
-	st16 tmp3, nt2_buf1
-
-	; do it
-
-draw_scroll_buffer_part:
-	; now loop through the column
-	lda #$00
-	tay
-	sta tmpa
-:
-	; get tile and store it
-	tya
-	pha
-	jsr get_tile
-	sta tmp4
-	pla
-	tay
-	lda tmp4
-	sta (tmp3), y
-	; prep next iteration
-	iny
-	inc tmpa
-	lda tmpa
-	cmp #$1e
-	bne :-
-	rts
+;draw_scroll_buffer_right:
+;	;; RIGHT seam!
+;
+;	; get x coordinate
+;	lda cam_x
+;	lsr
+;	lsr
+;	lsr
+;	sta tmpa+1
+;	
+;	; TOP table
+;	; get quadrant
+;	lda cam_high
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;	clc
+;	adc #$01
+;	and #$01
+;	sta tmp8
+;	; set destination
+;	st16 tmp3, nt0_buf0
+;	; do it
+;	jsr draw_scroll_buffer_part
+;
+;	; BOTTOM table
+;	; get quadrant
+;	lda cam_high
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;	clc
+;	adc #$01
+;	and #$01
+;	clc
+;	adc #$02
+;	sta tmp8
+;	; set destination
+;	st16 tmp3, nt2_buf0
+;	; do it
+;	jsr draw_scroll_buffer_part
+;
+;	rts
+;
+;draw_scroll_buffer_left:
+;	;; LEFT seam!
+;
+;	; get x coordinate
+;	; move it over 1 tile (and wrap around)
+;	lda cam_x
+;	clc
+;	adc #$08
+;	php
+;	php
+;	lsr
+;	lsr
+;	lsr
+;	sta tmpa+1
+;	
+;	; TOP table
+;	; get quadrant
+;	lda cam_high
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;	plp
+;	adc #$00
+;	and #$01
+;	sta tmp8
+;	; set destination
+;	st16 tmp3, nt0_buf1
+;	; do it
+;	jsr draw_scroll_buffer_part
+;
+;	; BOTTOM table
+;	; get quadrant
+;	lda cam_high
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;	plp
+;	adc #$00
+;	and #$01
+;	clc
+;	adc #$02
+;	sta tmp8
+;	; set destination
+;	st16 tmp3, nt2_buf1
+;
+;	; do it
+;
+;draw_scroll_buffer_part:
+;	; now loop through the column
+;	lda #$00
+;	tay
+;	sta tmpa
+;:
+;	; get tile and store it
+;	tya
+;	pha
+;	jsr get_tile
+;	sta tmp4
+;	pla
+;	tay
+;	lda tmp4
+;	sta (tmp3), y
+;	; prep next iteration
+;	iny
+;	inc tmpa
+;	lda tmpa
+;	cmp #$1e
+;	bne :-
+;	rts
 
 ; load onta a the appropriate bg tile at screen coordinates
 ; tmpa = y

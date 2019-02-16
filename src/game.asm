@@ -73,10 +73,10 @@ enter_game:
 
 ; stuff critical to do during vblank
 vblank_critical:
-	; update nametables..!
-	jsr update_nametables
+	; copy scrol seam buffer into the name tables !
+	jsr update_vram
 
-	; copy oam
+	; copy oam from ram into ppu
 	jsr update_oam
 
 	; set camera?
@@ -90,16 +90,16 @@ prepare_for_vblank:
 	jsr clear_oam
 	jsr iterate_entities
 
-	; render the scroll seam for next frame
-	; draw whichever one depending on the direction you're moving
-	lda scroll_dir
-	cmp #$00
-	beq :+
-	jsr draw_scroll_buffer_right
-	jmp :++
-:
-	jsr draw_scroll_buffer_left
-:
+;	; render the scroll seam for next frame
+;	; draw whichever one depending on the direction you're moving
+;	lda scroll_dir
+;	cmp #$00
+;	beq :+
+;	jsr draw_scroll_buffer_right
+;	jmp :++
+;:
+;	jsr draw_scroll_buffer_left
+;:
 	rts
 
 ; handler for the main game screen

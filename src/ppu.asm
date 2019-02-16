@@ -45,10 +45,15 @@ update_vram_vertical_seam:
 
 	; do y scroll seam update
 	lda scroll_dir
-	and #$02
-	bne :+
+	cmp #$02
+	beq :+
+	cmp #$03
+	beq :++
+	rts
+:
 	jmp copy_up_seam
-:	jmp copy_down_seam
+:
+	jmp copy_down_seam
 
 update_vram_horizontal_seam:
 	;; HORIZONTAL SCROLL SEAM
@@ -59,8 +64,11 @@ update_vram_horizontal_seam:
 
 	; do x scroll seam update
 	lda scroll_dir
-	and #$01
-	bne copy_right_seam
+	cmp #$00
+	beq copy_left_seam
+	cmp #$01
+	beq copy_right_seam
+	rts
 
 copy_left_seam:
 	; left seam is at the scroll position + 1 (first column is disabled) (both name tables)

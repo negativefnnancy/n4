@@ -30,7 +30,7 @@ draw_down_seam:
 	lsr
 	lsr
 	lsr
-	sta tmpa
+	tay
 
 	; set effective cam_high
 	lda cam_high
@@ -49,7 +49,7 @@ draw_up_seam:
 	lsr
 	lsr
 	lsr
-	sta tmpa
+	tay
 
 	; set effective cam_high
 	lda cam_high
@@ -73,11 +73,14 @@ draw_vertical_scroll_seam:
 	lsr
 	and #$01
 	clc
-	adc tmp8
+	adc tmp8	; change to ora?
 	sta tmp8
 
 	; set quadrant change
 	lda cam_x
+	; account for the 1st column disabled...
+	clc
+	adc #$08
 	lsr
 	lsr
 	lsr
@@ -96,7 +99,6 @@ draw_vertical_scroll_seam:
 	; next iteration
 	dex
 	php
-	stx tmpa+1	; should optimize this out
 	jsr get_tile
 	sta scroll_buf_y, x
 	plp
@@ -106,7 +108,126 @@ draw_vertical_scroll_seam:
 	rts
 
 draw_right_seam:
+	lda cam_x
+	lsr
+	lsr
+	lsr
+	tax
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	sta tmp8+1
+	inc tmp8+1
+	jmp draw_horizontal_scroll_seam
+
 draw_left_seam:
+	; im rewriting this idc it was awful
+	; and idc how ugly this is rn just work!!!
+	; get the dang x coordinate >:T
+	lda cam_x
+	clc
+	adc #$08
+	php
+	lsr
+	lsr
+	lsr
+	tax
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	plp
+	adc #$00
+	sta tmp8+1
+
+draw_horizontal_scroll_seam:
+	; and the dang y coordinate!!
+	lda cam_y
+	lsr
+	lsr
+	lsr
+	tay
+
+	; and the damn quadrant!!!
+	lda cam_high
+	rol
+	and #$02
+	sta tmp8
+	lda tmp8+1
+	and #$01
+	ora tmp8
+	sta tmp8
+
+	; where do we start drawing?
+	; at scroll_y
+	; also account for base nametable !!!
+	lda scroll_y
+	lsr
+	lsr
+	lsr
+	clc
+	adc #.lobyte(scroll_buf_x)
+	sta tmp4
+	lda scroll_y+1
+	and #$01
+	beq :+
+	lda tmp4
+	clc
+	adc #30
+	sta tmp4
+:
+	lda #.hibyte(scroll_buf_x)
+	sta tmp4+1
+
+	; how many times do we draw?
+	; 32!! just do it
+	lda #$20
+	sta tmp5
+
+	; do the DAMN loop
+	; its so ugly
+:
+	jsr get_tile
+	sta tmp3
+	tya
+	pha
+	lda #$00
+	tay	
+	lda tmp3
+	sta (tmp4), y
+	pla
+	tay
+	inc tmp4
+	; overflowing x scroll buf?
+	lda tmp4
+	cmp #.lobyte(scroll_buf_x+60)
+	bne :+
+	lda tmp4+1
+	cmp #.hibyte(scroll_buf_x+60)
+	bne :+
+	lda #.lobyte(scroll_buf_x)
+	sta tmp4
+	lda #.hibyte(scroll_buf_x)
+	sta tmp4+1
+:
+
+	; time to change quad????
+	iny
+	tya
+	and #$1f
+	tay
+	bne :+
+	lda tmp8
+	eor #$02
+	sta tmp8
+:
+	dec tmp5
+	bne :---
+
+	; done
 	rts
 
 ; render the scroll buffer seam for loading into the nametable next frame
@@ -229,17 +350,18 @@ draw_left_seam:
 ;	rts
 
 ; load onta a the appropriate bg tile at screen coordinates
-; tmpa = y
-; tmpa+1 = x
+; y reg = y pos
+; x reg = x pos
 ; tmp8 = quadrant : ) (just like nametable select)
 get_tile:
 	; x
-	lda tmpa+1
+	txa
 	lsr
 	and #$0f
 	sta tmpb
 	; y
-	lda tmpa
+	tya
+	pha
 	rol
 	rol
 	rol
@@ -248,10 +370,10 @@ get_tile:
 	sta tmpb
 	; now we have the map address
 	; get the metatile individual tile offset
-	lda tmpa+1
+	txa
 	and #$01
 	sta tmpb+1
-	lda tmpa
+	tya
 	rol
 	and #$02
 	ora tmpb+1
@@ -290,4 +412,8 @@ get_tile:
 	lda (tmpd), y
  
 	; go get em tiger
+	sta tmpc
+	pla
+	tay
+	lda tmpc
 	rts

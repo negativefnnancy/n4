@@ -12,8 +12,7 @@ reset_cam:
 ; move camera 1 pixel to the right
 move_cam_right:
 	; indicate scrolling direction (for vram buffer)
-	lda scroll_dir
-	ora #$01	; set bit 0 = 1
+	lda #$01
 	sta scroll_dir
 	; update the cam coordinate
 	inc cam_x
@@ -35,8 +34,7 @@ move_cam_right:
 ; move camera 1 pixel to the left
 move_cam_left:
 	; indicate scrolling direction (for vram buffer)
-	lda scroll_dir
-	and #$fe	; set bit 0 = 0
+	lda #$00
 	sta scroll_dir
 	; update the cam coordinate
 	dec cam_x
@@ -60,7 +58,7 @@ move_cam_left:
 ; move camera 1 pixel down
 move_cam_down:
 	; indicate scrolling direction (for vram buffer)
-	lda scroll_dir
+	lda #$03
 	ora #$02	; set bit 1 = 1
 	sta scroll_dir
 	; update the y scrolling!!
@@ -94,8 +92,7 @@ move_cam_down:
 ; move camera 1 pixel up
 move_cam_up:
 	; indicate scrolling direction (for vram buffer)
-	lda scroll_dir
-	and #$fd	; set bit 1 = 0
+	lda #$02
 	sta scroll_dir
 	; update the y scrolling!!
 	dec scroll_y

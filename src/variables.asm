@@ -33,7 +33,7 @@ cam_y:		.res 1
 cam_high:	.res 1	; high=x, low=y
 
 ; scroll buffer direction
-scroll_dir:	.res 1 ; 0 = left/up; 1 = right/down; bit 0 = x; bit 1 = y
+scroll_dir:	.res 1 ; 0 = left; 1 = right; 2 = up; else = down
 
 ; ppu scroll
 scroll_y:	.res 2 ; low byte = scroll; high byte = base nametable (vertical)

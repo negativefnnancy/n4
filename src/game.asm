@@ -96,25 +96,20 @@ prepare_for_vblank:
 
 	;; buffer vram updates!!!
 
-	; draw the horizontal scroll seam
 	lda scroll_dir
-	and #$01
+	cmp #$00
 	bne :+
-	jsr draw_left_seam
-	jmp :++
+	jmp draw_left_seam
 :
-	jsr draw_right_seam
-:
-
-	; draw the vertical scroll seam
-	lda scroll_dir
-	and #$02
+	cmp #$01
 	bne :+
-	jsr draw_up_seam
-	rts
+	jmp draw_right_seam
 :
-	jsr draw_down_seam
-	rts
+	cmp #$02
+	bne :+
+	jmp draw_up_seam
+:
+	jmp draw_down_seam
 
 ; handler for the main game screen
 game_handler:

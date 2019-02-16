@@ -43,7 +43,7 @@ collide:
 	sta tmp8
 
 	; get map quadrant base address on tmp9
-	ldy #Area::attributes
+	ldy #Area::map
 	lda (cur_area), y ; attribute map address low byte
 	sta tmp9
 	iny
@@ -55,6 +55,17 @@ collide:
 	; now get that foo'
 	ldy tmpb
 	lda (tmp9), y
+
+	; now we have the metatile, and we need to look up the collision data
+	tay
+	lda #.lobyte(metatiles::collision)
+	sta tmp9
+	lda #.hibyte(metatiles::collision)
+	sta tmp9+1
+	
+	; get the collision data!
+	lda (tmp9), y
+
 	; now mask it for direction moving
 	and tmpa
 	sta tmpa

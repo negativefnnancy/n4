@@ -411,7 +411,7 @@ get_tile:
 	rol
 	rol
 	clc
-	adc #.lobyte(metatiles)
+	adc #.lobyte(metatiles::tiles)
 	php
 	sta tmpd
 	lda tmpc
@@ -420,7 +420,7 @@ get_tile:
 	rol
 	and #$03
 	plp
-	adc #.hibyte(metatiles)
+	adc #.hibyte(metatiles::tiles)
 	sta tmpd+1
 	lda tmpb+1
 	tay

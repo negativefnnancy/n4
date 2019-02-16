@@ -28,15 +28,15 @@ enter_game:
 	jsr load_bg_palette
 
 	; load the map data
-	ldy #Area::map
-	lda (cur_area), y
-	sta tmp0
-	iny
-	lda (cur_area), y
-	sta tmp0+1
-	st16 tmp1, map
-	st16 tmp2, $400
-	jsr copy
+	;ldy #Area::map
+	;lda (cur_area), y
+	;sta tmp0
+	;iny
+	;lda (cur_area), y
+	;sta tmp0+1
+	;st16 tmp1, map
+	;st16 tmp2, $400
+	;jsr copy
 
 	; load the entity table
 	ldy #Area::entities

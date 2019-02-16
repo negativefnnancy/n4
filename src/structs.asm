@@ -1,6 +1,7 @@
 ; represents an area
 .struct Area
 	map		.word
+	attributes	.word
 	entities	.word
 .endstruct
 

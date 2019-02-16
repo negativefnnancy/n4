@@ -14,6 +14,7 @@ tmpa:		.res 2
 tmpb:		.res 2
 tmpc:		.res 2
 tmpd:		.res 2
+tmpe:		.res 2
 
 ; engine state
 state:		.res 1

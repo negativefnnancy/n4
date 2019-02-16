@@ -28,6 +28,11 @@
 	test:			.incbin "test.map"
 .endscope
 
+; attribute maps (collision, color, and room ids for overalying onto maps)
+.scope atr
+	test:			.incbin "test.atr"
+.endscope
+
 ; entity tables
 .scope ent
 	test:			.incbin "test.ent"
@@ -35,8 +40,9 @@
 
 ; areas
 .scope area
-	room:	; your bedroom
-		.word map::downstairs
+	test:
+		.word map::test
+		.word atr::test
 		.word ent::test
 .endscope
 

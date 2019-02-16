@@ -2,34 +2,103 @@
 nancy_walk_step_size	= $000c ; $0030
 nancy_run_step_size	= $0018 ; $0030
 
-; make mancy move horizontally dude
-; tmp8 = offset
-move_nancy_x:
-	; low byte
+; collide with stuff m8
+; tmpa = movement mask (4bit)
+; tmpd = positive movement speed
+; tmpe = negative movement speed
+nancy_collide:
+	left_off	= $0020
+	right_off	= $00a0
+	up_off		= $0080
+	down_off	= $00f0
+	x_center_off	= $0080
+	y_center_off	= $00c0
+
+	; figure out collide position
+	; make tmpb = x and tmpc = y
+	lda tmpa
+	and #%00000001
+	beq :+
+	; right
 	lda entities+Entity::x_pos, y
 	clc
-	adc tmp8
-	sta entities+Entity::x_pos, y
-	; high byte
+	adc #.lobyte(right_off)
+	sta tmpb
 	lda entities+Entity::x_pos+1, y
-	adc tmp8+1
-	sta entities+Entity::x_pos+1, y
-	; buh bey
-	rts
-
-; make mancy move vertically dude
-; tmp8 = offset
-move_nancy_y:
-	; low byte
+	adc #.hibyte(right_off)
+	sta tmpb+1
+	jmp @boom_done_yo
+:
+	lda tmpa
+	and #%00000010
+	beq :+
+	; left
+	lda entities+Entity::x_pos, y
+	clc
+	adc #.lobyte(left_off)
+	sta tmpb
+	lda entities+Entity::x_pos+1, y
+	adc #.hibyte(left_off)
+	sta tmpb+1
+	jmp @boom_done_yo
+:
+	lda tmpa
+	and #%00000100
+	beq :+
+	; down
 	lda entities+Entity::y_pos, y
 	clc
-	adc tmp8
-	sta entities+Entity::y_pos, y
-	; high byte
+	adc #.lobyte(down_off)
+	sta tmpc
 	lda entities+Entity::y_pos+1, y
-	adc tmp8+1
-	sta entities+Entity::y_pos+1, y
-	; buh bey
+	adc #.hibyte(down_off)
+	sta tmpc+1
+	jmp @boom_done_yo
+:
+	lda tmpa
+	and #%00001000
+	beq @boom_done_yo
+	; up
+	lda entities+Entity::y_pos, y
+	clc
+	adc #.lobyte(up_off)
+	sta tmpc
+	lda entities+Entity::y_pos+1, y
+	adc #.hibyte(up_off)
+	sta tmpc+1
+@boom_done_yo:
+
+	; now for the other coordinate
+	lda tmpa
+	and #%00000011
+	beq :+
+	; moving horizontally, so set y to center
+	lda entities+Entity::y_pos, y
+	clc
+	adc #.lobyte(y_center_off)
+	sta tmpc
+	lda entities+Entity::y_pos+1, y
+	adc #.hibyte(y_center_off)
+	sta tmpc+1
+	jmp @you_done_it_again
+:
+	lda tmpa
+	and #%00001100
+	beq @you_done_it_again
+	; moving vertically so set x to center
+	lda entities+Entity::x_pos, y
+	clc
+	adc #.lobyte(x_center_off)
+	sta tmpb
+	lda entities+Entity::x_pos+1, y
+	adc #.hibyte(x_center_off)
+	sta tmpb+1
+@you_done_it_again:
+	
+	; do the collide
+	jsr collide
+
+	; bbye
 	rts
 
 ; nancy's entity handler
@@ -143,46 +212,61 @@ nancy_entity_handler:
 @skip_start_moving:
 
 	; see if nancy needs to actually move!
+
+	; store moving direction mask on tmpa
+	lda #$00
+	sta tmpa
+
+	;; uncomment this to sync movement with animation
 	; sync motion with animation frames tho,
 	; bc otherwise it looks awkward lol
-	lda entities+Entity::timer, y
-	cmp #$00
+	;lda entities+Entity::timer, y
+	;cmp #$00
 	;bne @skip_move	
 	; ok now we've been synced, lets see what buttons are pressed
 	; see if run or walk first
+
+
 	lda pad
 	and #%01000000
 	beq :+
 	st16 tmp8, nancy_run_step_size	
+	st16 tmpd, nancy_run_step_size	
 	st16 tmp9, -nancy_run_step_size	
+	st16 tmpe, -nancy_run_step_size	
 	jmp :++
 :
 	st16 tmp8, nancy_walk_step_size	
+	st16 tmpd, nancy_walk_step_size	
 	st16 tmp9, -nancy_walk_step_size	
+	st16 tmpe, -nancy_walk_step_size	
 :
 	lda pad
 	and #%00000001
 	beq :+
 	; move right
-	jsr move_nancy_x
+	sta tmpa
+	jsr move_entity_x
 	jmp @skip_move
 :
 	lda pad
 	and #%00000010
 	beq :+
 	; move left
+	sta tmpa
 	lda tmp9
 	sta tmp8
 	lda tmp9+1
 	sta tmp8+1
-	jsr move_nancy_x
+	jsr move_entity_x
 	jmp @skip_move
 :
 	lda pad
 	and #%00000100
 	beq :+
 	; move down
-	jsr move_nancy_y
+	sta tmpa
+	jsr move_entity_y
 	; wrap at 240
 	;lda entities+Entity::y_pos+1, y
 	;cmp #$0f
@@ -196,11 +280,12 @@ nancy_entity_handler:
 	and #%00001000
 	beq :+
 	; move up
+	sta tmpa
 	lda tmp9
 	sta tmp8
 	lda tmp9+1
 	sta tmp8+1
-	jsr move_nancy_y
+	jsr move_entity_y
 	; wrap at 240
 	;lda entities+Entity::y_pos+1, y
 	;cmp #$0f
@@ -210,6 +295,15 @@ nancy_entity_handler:
 	;sta entities+Entity::y_pos+1, y
 :
 @skip_move:
+
+
+;;;;; COLLISION STUFF
+	; only do collision if moving ya?
+	lda tmpa
+	beq :+
+	; do the collision stuff
+	jsr nancy_collide
+:
 
 
 ;;;;; CAMERA FOLLOW NANCY

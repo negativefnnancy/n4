@@ -3,6 +3,8 @@
 .include "vectors.asm"
 .include "handlers.asm"
 .include "sprites.asm"
+.include "entities.asm"
 .include "camera.asm"
 .include "ppu.asm"
 .include "map.asm"
+.include "collision.asm"

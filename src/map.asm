@@ -381,12 +381,25 @@ get_tile:
 	ora tmpb+1
 	sta tmpb+1	
 	; load the metatile id from the map data
-	lda tmp8
-	clc
-	adc #.hibyte(map)
-	sta tmp9+1
-	lda #$00
+
+	;; this to load from rom
+	ldy #Area::map
+	lda (cur_area), y ; map address low byte
 	sta tmp9
+	iny
+	lda (cur_area), y ; map address high byte
+	clc
+	adc tmp8
+	sta tmp9+1
+
+	;; this to load from upper half of ram
+	;lda tmp8
+	;clc
+	;adc #.hibyte(map)
+	;sta tmp9+1
+	;lda #$00
+	;sta tmp9
+
 	lda tmpb
 	tay
 	lda (tmp9), y

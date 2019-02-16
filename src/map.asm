@@ -54,6 +54,92 @@ draw_map_part:
 	
 	rts
 
+; update the down seam buffer
+draw_down_seam:
+	; set the y origin
+	lda cam_y
+	; add a vertical screen's worth :^ )
+	clc
+	adc #$f0
+	php
+	lsr
+	lsr
+	lsr
+	sta tmpa
+
+	; set effective cam_high
+	lda cam_high
+	and #$0f
+	plp
+	adc #$00
+	sta tmp8
+
+	; continue...
+	jmp draw_vertical_scroll_seam
+
+; update the up seam buffer
+draw_up_seam:
+	; set the y origin
+	lda cam_y
+	lsr
+	lsr
+	lsr
+	sta tmpa
+
+	; set effective cam_high
+	lda cam_high
+	sta tmp8
+
+draw_vertical_scroll_seam:
+	; set the x origin
+	ldx #$20
+
+	; set vertical quadrant
+	lda tmp8
+	rol
+	and #$02
+	sta tmp8
+
+	; set quadrant
+	lda cam_high
+	lsr
+	lsr
+	lsr
+	lsr
+	and #$01
+	clc
+	adc tmp8
+	sta tmp8
+
+	; set quadrant change
+	lda cam_x
+	lsr
+	lsr
+	lsr
+	sta tmp7
+
+	; sweep the x direction
+:
+	; see if time to change quadrant
+	cpx tmp7
+	bne :+
+	; change x quadrant
+	lda tmp8
+	eor #$01
+	sta tmp8
+:
+	; next iteration
+	dex
+	php
+	stx tmpa+1	; should optimize this out
+	jsr get_tile
+	sta scroll_buf_y, x
+	plp
+	bne :--
+
+	; done
+	rts
+
 ; render the scroll buffer seam for loading into the nametable next frame
 ;draw_scroll_buffer_right:
 ;	;; RIGHT seam!
@@ -181,6 +267,7 @@ get_tile:
 	; x
 	lda tmpa+1
 	lsr
+	and #$0f
 	sta tmpb
 	; y
 	lda tmpa

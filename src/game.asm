@@ -100,6 +100,15 @@ prepare_for_vblank:
 ;:
 ;	jsr draw_scroll_buffer_left
 ;:
+
+	; draw the vertical scroll seam
+	lda scroll_dir
+	and #$02
+	bne :+
+	jsr draw_up_seam
+	rts
+:
+	jsr draw_down_seam
 	rts
 
 ; handler for the main game screen

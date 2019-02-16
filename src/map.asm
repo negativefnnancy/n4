@@ -1,57 +1,22 @@
-; draw the entire bg map, both top and bottom nametables
+; fill the screen with the map!
+; kinda just assuming cam has ben reset first
+; one idea is to have a push_cam and pull_cam subroutines, and use them here
 draw_map:
-	; first draw the top 
+	; horizental increments
 	lda #$00
-	sta tmp8
-	jsr draw_map_part
-	; then draw the bottom
-	lda #$02
-	sta tmp8
-	jsr draw_map_part
+	sta ppuctrl
 
-	rts
-
-; tmp8 = basenametable / map region
-draw_map_part:
-	jsr wait_vblank
-
-	;;; note: assuming ppu is off and horizontal increment mode
-	; its 32 by 30 soooo
-	; lets just loop over whichever nametable we are supposed to be filling..!
-	; latch the ppu address
-	bit ppustatus
-	lda tmp8
+	; sweep the screen from top to bottom drawing each line	
+:
+	jsr draw_up_seam
+	jsr copy_up_seam
+	lda scroll_y
 	clc
-	rol
-	rol
-	adc #.hibyte(nt0)
-	sta ppuaddr
-	lda #.lobyte(nt0)
-	sta ppuaddr
-
-	; y !
-	lda #$00
-	sta tmpa
-:
-	; x !
-	lda #$00
-	sta tmpa+1
-:
-	; inner loop with x and y:
-	jsr get_tile
-	sta ppudata
-
-	; done inner loop
-	inc tmpa+1
-	lda tmpa+1
-	cmp #$20
+	adc #$08
+	sta scroll_y
+	sta cam_y
+	cmp #$f0
 	bne :-
-
-	inc tmpa
-	lda tmpa
-	cmp #$1e
-	bne :--
-	
 	rts
 
 ; update the down seam buffer
@@ -138,6 +103,10 @@ draw_vertical_scroll_seam:
 	bne :--
 
 	; done
+	rts
+
+draw_right_seam:
+draw_left_seam:
 	rts
 
 ; render the scroll buffer seam for loading into the nametable next frame

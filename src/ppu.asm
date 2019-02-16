@@ -31,6 +31,12 @@ update_vram:
 	; but only for one direction!
 	; so every frame 60+32 bytes will be updated
 
+	; first do the horizontal seam
+	jsr update_vram_horizontal_seam
+	
+	; then do the vertical seam...
+
+update_vram_vertical_seam:
 	;; VERTICAL SCROLL SEAM
 
 	; set things up for horizontal increments
@@ -41,12 +47,10 @@ update_vram:
 	lda scroll_dir
 	and #$02
 	bne :+
-	jsr copy_up_seam
-	jmp :++
-:
-	jsr copy_down_seam
-:
+	jmp copy_up_seam
+:	jmp copy_down_seam
 
+update_vram_horizontal_seam:
 	;; HORIZONTAL SCROLL SEAM
 
 	; set things up for vertical increments

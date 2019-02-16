@@ -54,7 +54,11 @@ enter_game:
 
 	; now that the map is loaded
 	; render it to the bg map
+	jsr wait_vblank
 	jsr draw_map
+
+	; reset cam again now that map has been drawn
+	jsr reset_cam
 
 	; prepare the initial frame
 	jsr prepare_for_vblank
@@ -90,16 +94,17 @@ prepare_for_vblank:
 	jsr clear_oam
 	jsr iterate_entities
 
-;	; render the scroll seam for next frame
-;	; draw whichever one depending on the direction you're moving
-;	lda scroll_dir
-;	cmp #$00
-;	beq :+
-;	jsr draw_scroll_buffer_right
-;	jmp :++
-;:
-;	jsr draw_scroll_buffer_left
-;:
+	;; buffer vram updates!!!
+
+	; draw the horizontal scroll seam
+	lda scroll_dir
+	and #$01
+	bne :+
+	jsr draw_left_seam
+	jmp :++
+:
+	jsr draw_right_seam
+:
 
 	; draw the vertical scroll seam
 	lda scroll_dir

@@ -62,7 +62,6 @@ metatiles:
 	.byte $48, $48, $25, $25	; south facing shadow
 	.byte $25, $49, $25, $49	; west facing shadow
 
-
 	; $10
 	.byte $48, $4b, $25, $49	; southwest facing inner corner shadow
 	.byte $34, $35, $3b, $43	; northwest outer corner

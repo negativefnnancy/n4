@@ -41,7 +41,7 @@
 ; areas
 .scope area
 	test:
-		.word map::test
+		.word map::room
 		.word atr::test
 		.word ent::test
 .endscope
@@ -49,15 +49,15 @@
 ; metatiles
 .scope metatiles
 	; collision data bit format:
-	; xxxhudlr
-	; h = collide at midpoint of tile
+	; hhhhudlr
 	; u = up, d = down, l = left, r = right
+	; h = in the respective direction, collide at half point?
 	collision:
 		; $00
 		.byte $00, $00, $00, $00, $08, $04, $01, $02
 		.byte $00, $00, $00, $00, $04, $02, $00, $00
 		.byte $00, $05, $06, $09, $0a, $00, $01, $00
-		.byte $01, $11, $02, $08, $00, $08, $00, $08
+		.byte $01, $1d, $02, $08, $88, $08, $88, $08
 
 		; $20
 		.byte $04, $01, $02, $00, $00, $00, $00, $00

@@ -7,6 +7,27 @@
 ; tmpd = positive speed
 ; tmpe = negative speed
 collide:
+	; check half tile positions first
+	lda tmpb
+	rol
+	rol
+	and #$01
+	sta tmpf
+	lda tmpc
+	rol
+	rol
+	rol
+	rol
+	and #$04
+	ora tmpf
+	sta tmpf
+	eor #$05
+	clc
+	rol
+	ora tmpf
+	sta tmpf
+	; now tmpf is half block mask
+
 	; x
 	lda tmpb+1
 	and #$0f
@@ -66,7 +87,53 @@ collide:
 	; get the collision data!
 	lda (tmp9), y
 
+	; save it
+	sta tmpb
+
+	; get the half collide flag for the metatile
+	lda tmpb
+	and #$f0
+	lsr
+	lsr
+	lsr
+	lsr
+	eor #$ff
+	; mask the mask lol
+	ora tmpf
+	sta tmpf
+
+	; now also mask x with y and y with x
+	; and u and d; and l and r
+	clc
+	rol
+	and tmpf
+	and #$0a
+	sta tmp9
+	lsr
+	ora tmp9
+	; swap lr and ud
+	clc
+	rol
+	rol
+	sta tmp9
+	lsr
+	lsr
+	lsr
+	lsr
+	ora tmp9
+	and #$0f
+	; and u&d with l and r; and and l&r with u and d	
+	and tmpf
+	sta tmpf	
+
+	; mask for half collide
+	; so mask it with the half tile position mask
+	lda tmpb
+	and tmpf
+	sta tmpb
+
 	; now mask it for direction moving
+	lda tmpb
 	and tmpa
 	sta tmpa
 

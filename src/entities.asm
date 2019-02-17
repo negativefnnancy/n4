@@ -1,3 +1,15 @@
+.include "nancy.asm"
+
+; the null handler for null entities
+; does nothing, obv
+null_entity_handler:
+	jmp entity_handler_return
+
+; entity logic handler routines
+entity_handler_table:
+.word null_entity_handler-1
+.word nancy_entity_handler-1
+
 ; make mancy move horizontally dude
 ; tmp8 = offset
 move_entity_x:

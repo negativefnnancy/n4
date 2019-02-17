@@ -8,3 +8,4 @@
 .include "ppu.asm"
 .include "map.asm"
 .include "collision.asm"
+.include "interactions.asm"

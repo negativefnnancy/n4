@@ -1,8 +1,9 @@
 ; represents an area
 .struct Area
-	map		.word
-	attributes	.word
-	entities	.word
+	map		.word	; the bg map
+	attributes	.word	; the attributes (room ids, color, and interaction ids)
+	entities	.word	; the entity table to load with the map
+	interactions	.word	; an array of function pointers corresponding with interaction ids
 .endstruct
 
 ; represents an in-game entity

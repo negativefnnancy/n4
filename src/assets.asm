@@ -44,6 +44,8 @@
 		.word map::room
 		.word atr::test
 		.word ent::test
+		; interaction handler pointers
+		.word null_handler
 .endscope
 
 ; metatiles

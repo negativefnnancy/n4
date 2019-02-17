@@ -41,11 +41,13 @@
 ; areas
 .scope area
 	test:
-		.word map::room
+		.word map::test
 		.word atr::test
 		.word ent::test
 		; interaction handler pointers
-		.word null_handler
+		; index starts at 1 instead of 0
+		; (because interaction id 0 is used for null)
+		.word test_handler-1
 .endscope
 
 ; metatiles

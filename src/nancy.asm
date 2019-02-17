@@ -2,18 +2,42 @@
 nancy_walk_step_size	= $000c ; $0030
 nancy_run_step_size	= $0018 ; $0030
 
+; hitbox related offsets
+left_off	= $0020
+right_off	= $00a0
+up_off		= $0080
+down_off	= $00f0
+x_center_off	= $0080
+y_center_off	= $00c0
+
+; interact with the map
+; just do interaction from sprite center lol
+nancy_interact:
+	; figure out the interact position
+	; make tmpb = x and tmpc = y
+	lda entities+Entity::x_pos, y
+	clc
+	adc #.lobyte(x_center_off)
+	sta tmpb
+	lda entities+Entity::x_pos+1, y
+	adc #.hibyte(x_center_off)
+	sta tmpb+1
+	lda entities+Entity::y_pos, y
+	clc
+	adc #.lobyte(y_center_off)
+	sta tmpc
+	lda entities+Entity::y_pos+1, y
+	adc #.hibyte(y_center_off)
+	sta tmpc+1
+	
+	; do the interact
+	jmp interact
+
 ; collide with stuff m8
 ; tmpa = movement mask (4bit)
 ; tmpd = positive movement speed
 ; tmpe = negative movement speed
 nancy_collide:
-	left_off	= $0020
-	right_off	= $00a0
-	up_off		= $0080
-	down_off	= $00f0
-	x_center_off	= $0080
-	y_center_off	= $00c0
-
 	; figure out collide position
 	; make tmpb = x and tmpc = y
 	lda tmpa
@@ -96,10 +120,7 @@ nancy_collide:
 @you_done_it_again:
 	
 	; do the collide
-	jsr collide
-
-	; bbye
-	rts
+	jmp collide
 
 ; nancy's entity handler
 ; remember y is the entity pointer
@@ -295,6 +316,15 @@ nancy_entity_handler:
 	;sta entities+Entity::y_pos+1, y
 :
 @skip_move:
+
+
+;;;;; MAP INTERACTION STUFF
+	; check for a button Bang
+	lda pad_press
+	and #$80
+	beq :+
+	jsr nancy_interact
+:
 
 
 ;;;;; COLLISION STUFF

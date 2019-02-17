@@ -1,4 +1,5 @@
 ; this file contains subroutines for 'interact' triggered events
+.include "room.asm"
 
 ; the main interaction routine, call from an entity to make it interact with the map
 ; y = entity id
@@ -96,9 +97,3 @@ interact:
 	lda tmpb
 	pha
 	rts	; jmup.!
-
-; a test handler lol
-test_handler:
-	lda #$97
-	sta $60
-	rts

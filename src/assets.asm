@@ -31,6 +31,7 @@
 ; attribute maps (collision, color, and room ids for overalying onto maps)
 .scope atr
 	test:			.incbin "test.atr"
+	room:			.incbin "room.atr"
 .endscope
 
 ; entity tables
@@ -41,13 +42,16 @@
 ; areas
 .scope area
 	test:
-		.word map::test
-		.word atr::test
+		.word map::room
+		.word atr::room
 		.word ent::test
 		; interaction handler pointers
 		; index starts at 1 instead of 0
 		; (because interaction id 0 is used for null)
-		.word test_handler-1
+		.word enter_bathroom-1
+		.word exit_bathroom-1
+		.word enter_closet-1
+		.word exit_closet-1
 .endscope
 
 ; metatiles

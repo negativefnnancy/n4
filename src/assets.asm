@@ -22,36 +22,56 @@
 
 ; maps
 .scope map
+	test:			.incbin "test.map"
 	room:			.incbin "room.map"
 	upstairs:		.incbin "upstairs.map"
 	downstairs:		.incbin "downstairs.map"
-	test:			.incbin "test.map"
 .endscope
 
 ; attribute maps (collision, color, and room ids for overalying onto maps)
 .scope atr
 	test:			.incbin "test.atr"
 	room:			.incbin "room.atr"
+	upstairs:		.incbin "upstairs.atr"
+	downstairs:		.incbin "downstairs.atr"
 .endscope
 
 ; entity tables
 .scope ent
 	test:			.incbin "test.ent"
+	room:			.incbin "test.ent"
+	upstairs:		.incbin "test.ent"
+	downstairs:		.incbin "test.ent"
 .endscope
 
 ; areas
 .scope area
-	test:
-		.word map::room
-		.word atr::room
-		.word ent::test
+	downstairs:
+		.word map::downstairs
+		.word atr::downstairs
+		.word ent::downstairs
 		; interaction handler pointers
 		; index starts at 1 instead of 0
 		; (because interaction id 0 is used for null)
-		.word enter_bathroom-1
-		.word exit_bathroom-1
-		.word enter_closet-1
-		.word exit_closet-1
+	upstairs:
+		.word map::upstairs
+		.word atr::upstairs
+		.word ent::upstairs
+		; interaction handler pointers
+		; index starts at 1 instead of 0
+		; (because interaction id 0 is used for null)
+	room:
+		.word map::room
+		.word atr::room
+		.word ent::room
+		; interaction handler pointers
+		; index starts at 1 instead of 0
+		; (because interaction id 0 is used for null)
+		.word room_enter_bathroom-1
+		.word room_exit_bathroom-1
+		.word room_enter_closet-1
+		.word room_exit_closet-1
+		.word room_leave-1
 .endscope
 
 ; metatiles

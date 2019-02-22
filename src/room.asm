@@ -10,8 +10,14 @@ closet_enter_x		= $0a00
 closet_enter_y		= $0c00
 closet_exit_x		= $0a00
 closet_exit_y		= $0900
+main_door_x		= $0700
+main_door_y		= $0400
 
-enter_bathroom:
+room_leave:
+	st16 warp_area, area::upstairs
+	rts
+
+room_enter_bathroom:
 	lda #.lobyte(bathroom_enter_x)
 	sta entities+Entity::x_pos, y
 	lda #.hibyte(bathroom_enter_x)
@@ -22,7 +28,7 @@ enter_bathroom:
 	sta entities+Entity::y_pos+1, y
 	rts
 
-exit_bathroom:
+room_exit_bathroom:
 	lda #.lobyte(bathroom_exit_x)
 	sta entities+Entity::x_pos, y
 	lda #.hibyte(bathroom_exit_x)
@@ -33,7 +39,7 @@ exit_bathroom:
 	sta entities+Entity::y_pos+1, y
 	rts
 
-enter_closet:
+room_enter_closet:
 	lda #.lobyte(closet_enter_x)
 	sta entities+Entity::x_pos, y
 	lda #.hibyte(closet_enter_x)
@@ -44,7 +50,7 @@ enter_closet:
 	sta entities+Entity::y_pos+1, y
 	rts
 
-exit_closet:
+room_exit_closet:
 	lda #.lobyte(closet_exit_x)
 	sta entities+Entity::x_pos, y
 	lda #.hibyte(closet_exit_x)

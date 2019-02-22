@@ -1,6 +1,11 @@
 ; setup the main game screen
 ; cur_area = area address
 enter_game:
+	; clear any warp
+	lda #$00
+	sta warp_area
+	sta warp_area+1
+
 	; wait for vblank
 	jsr wait_vblank
 
@@ -122,14 +127,19 @@ game_handler:
 	;; POST VBLANK STUFF
 	jsr prepare_for_vblank
 
-	;; and misc temp stuff yeah
-	; await the start button
-	lda pad_press
-	and #%00010000
+	;; and then see if a warp to a new area has been requested...
+	lda warp_area
 	beq :+
+	lda warp_area+1
+	beq :+
+	; yes good, warp time
+	lda warp_area
+	sta cur_area
+	lda warp_area+1
+	sta cur_area+1
 	
-	; return to the title screen
-	jsr enter_title
+	; enter 8 )
+	jsr enter_game
 :
 	rti
 
